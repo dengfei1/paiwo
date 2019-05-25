@@ -1,0 +1,150 @@
+<!--pages/run/run.wxml-->
+<view class='container f3' id='run'>
+  <!-- 顶部 -->
+  <view class='top'>
+    <view class='product dis'>1315343
+      <text class='pdt-sel iconfont icon-caidan dis' bindtap='more'></text>
+    </view>
+    <view class='address te-al'></view>
+  </view>
+  <!-- 顶部结束 -->
+  <!-- 状态参数修换切换 -->
+  <view class='pageCut'>
+    <view class='topTabSwiper fixed' style='width:100%'>
+      <view class='tab  {{currentData == 0 ? "tabBorer" : ""}}' data-current="0" bindtap='checkCurrent'>运行状态</view>
+      <view class='tab  {{currentData == 1 ? "tabBorer" : ""}}' data-current="1" bindtap='checkCurrent'>参数设置</view>
+      <view class='tab  {{currentData == 2 ? "tabBorer" : ""}}' data-current="2" bindtap='checkCurrent'>系统定时</view>
+      <swiper current="{{currentData}}" class='swiper' style="height:{{winHeight}}rpx;" duration="300" bindchange="bindchange">
+        <!-- 运行状态 -->
+        <swiper-item>
+          <view class='swiper_con white'>
+            <block wx:for="{{dataArr}}" wx:for-index="activityIndex">
+              <view class="swiper-list">
+                <view class='fl list-left'>{{item.name}}
+                  <text class='{{item.classIco}}' bindtap='{{item.chart}}'></text>
+                </view>
+                <view class='fr list-right'>{{item.state}}</view>
+                <view class='cleaned'></view>
+              </view>
+            </block>
+          </view>
+        </swiper-item>
+        <!-- 状态结束 -->
+        <!-- 参数设置 -->
+        <swiper-item>
+
+          <form bindsubmit="formSubmit1" bindreset="formReset1">
+            <view class='swiper_con white h8'>
+              <!-- 选择 -->
+              <view class='parameter1'>
+                <picker bindchange="bindPickerChange1" value="{{index}}" range="{{power}}" name='now'>
+                  当前状态：
+                  <text class="picker dis rela"> {{power[index]}}<text class='iconfont icon-tubiao- color abso ri20'></text></text>
+                </picker>
+              </view>
+              <view class='parameter2'>
+                <picker bindchange="bindPickerChange2" value="{{key}}" range="{{mode}}" name='run'>
+                  运行模式：
+                  <text class="picker dis rela"> {{mode[key]}}<text class='iconfont icon-tubiao- color abso ri20'></text></text>
+                </picker>
+              </view>
+              <view class='parameter2'>
+                <picker name='tem'>
+                  温度设置：
+                  <text class="picker dis rela">26<text class='color abso ri20'>(℃)</text></text>
+                </picker>
+              </view>
+              <!-- 选择结束 -->
+            </view>
+            <button class='submit' form-type="submit">提 交</button>
+          </form>
+        </swiper-item>
+        <!-- 系统定时 -->
+        <swiper-item>
+          <scroll-view scroll-y="true" class="scoll-h">
+            <form bindsubmit="formSubmit" bindreset="formReset">
+              <!-- <view class='iconfont icon_bstianjia'></view> -->
+              <!-- 系统定时 -->
+              <view class='onTime h9 swiper_con'>
+                <view class='fr h7' catchtap='addTime'>添加定时
+                  <text class='iconfont icon-tianjia '></text>
+                </view>
+                <view class='cleaned'></view>
+                <view class='onTime-sel white h9' wx:for='{{addTime}}' data-index='{{index}}' wx:key="{{inde}}">
+                  <view class='num iconfont {{item.icon}} fl' style='width:300rpx;text-align:left'>第{{index+1}}阶段</view>
+                  <!-- 删除 -->
+                  <view class='iconfont icon-shanchu fr' bindtap='del' data-index="{{index}}" style='width:100rpx;text-align:right'></view>
+                  <view class='cleaned'></view>
+                  <!-- 时间选择 -->
+                  <view class='time-set dis fl'>
+                    <picker mode="time" value="{{time[index]}}" start="00:01" end="23:59" bindchange="bindTimeChange" data-d="{{index}}" name='{{time[index]}}'>
+                      开机时间：<text class='bor dis rela time-set'> {{time[index]}}</text>
+                    </picker>
+                  </view>
+                  <!-- <text class='fl line'>---</text> -->
+                  <view class='time-set dis fl'>
+                    <picker mode="time" value="{{time1[index]}}" start="00:01" end="23:59" bindchange="bindTimeChange1" data-e="{{index}}" name='{{time[index]}}'>
+                     关机时间： <text class='bor dis rela time-set'> {{time1[index]}}</text>
+                    </picker>
+                  </view>
+                
+                <view class='comfig fr'><button class='submit' form-type="submit">确 定</button></view>
+                    <view class='cleaned'></view>
+                </view>
+              </view>
+              <!-- 系统定时结束 -->
+
+            </form>
+          </scroll-view>
+        </swiper-item>
+        <!-- 系统定时结束 -->
+      </swiper>
+      <!-- 参数结束 -->
+    </view>
+  </view>
+  <!-- 切换结束 -->
+  <!--选择切换设备 -->
+  <view class='more rela' wx:if="{{isHide}}">
+    <text class='iconfont icon-shanchu abso' bindtap='back'></text>
+    <view class='change'>
+      <view wx:for="{{deviceArr}}" class='proList' bindtap='deviceArr' data-index="{{index}}">
+        <view>{{item.name}}</view>
+        <view>{{item.address}}</view>
+      </view>
+    </view>
+  </view>
+  <!-- 总进水温度 -->
+  <view class='mask totalTem rela' wx:if='{{isHided}}'>
+    <view class='box'>
+      <view class='name iconfont icon-tubiao f1'> 总进水温度</view>
+      <text class='iconfont icon-shanchu abso' bindtap='back'></text>
+      <canvas canvas-id="canvas1" class="canvas"></canvas>
+    </view>
+  </view>
+  <!-- 进水温度 -->
+  <view class='mask totalTem rela' wx:if='{{isHided1}}'>
+    <view class='box'>
+      <view class='name iconfont icon-tubiao f1'> 进水温度</view>
+      <text class='iconfont icon-shanchu abso' bindtap='back'></text>
+      <canvas canvas-id="canvas2" class="canvas"></canvas>
+    </view>
+  </view>
+
+  <!-- 出水温度 -->
+  <view class='mask totalTem rela' wx:if='{{isHided2}}'>
+    <view class='box'>
+      <view class='name iconfont icon-tubiao f1'>出水温度</view>
+      <text class='iconfont icon-shanchu abso' bindtap='back'></text>
+      <canvas canvas-id="canvas3" class="canvas"></canvas>
+    </view>
+  </view>
+
+  <!-- 环境温度 -->
+  <view class='mask totalTem rela' wx:if='{{isHided3}}'>
+    <view class='box'>
+      <view class='name iconfont icon-tubiao f1'> 环境温度</view>
+      <text class='iconfont icon-shanchu abso' bindtap='back'></text>
+      <canvas canvas-id="canvas4" class="canvas"></canvas>
+    </view>
+  </view>
+</view>

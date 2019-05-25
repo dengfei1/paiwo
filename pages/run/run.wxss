@@ -1,0 +1,50 @@
+/* pages/run/run.wxss */
+
+.top{width:100%;line-height: 90rpx;background: #0194dd;color: white;text-align: center;position: relative;font-weight: bold;top: 0;right: 0;left: 0;}
+.icon-zhuxingtu{color: #fc9366;margin-left: 10rpx}
+.pdt-sel{position: absolute;right: 50rpx;font-size: 32rpx;top:0}
+.pageCut{width: 750rpx;top: 90rpx;}
+/* 切换按钮 */
+.tab{float: left;text-align: center;padding: 10rpx 0; width: 33.3%;line-height: 70rpx;background: white}
+.topTabSwiper{border-top: 1px solid #ccc; zoom: 1;}
+.topTabSwiper:after{content: ""; clear: both;display: block;}
+.tabBorer{color: #fc9366;width: 33.3%}
+.swiper{width: 100%;}
+
+/* 运行状态 */
+.swiper_con{margin-top: 10rpx;text-align: center; width: 100%;}
+.swiper-list{border-bottom: 1px solid #efefef;line-height: 90rpx;margin: 0 15rpx;}
+.list-left{margin-left: 35rpx}
+.list-right{margin-right: 35rpx;color: #979797}
+
+/* 参数设置 */
+.parameter1{padding-top: 15rpx}
+.picker{width: 526rpx;border: 1rpx solid #979797;border-radius: 15rpx;margin-bottom: 20rpx}
+.mode-set{width:330rpx;text-align:center;}
+.onTime-sel{padding: 15rpx 32rpx;text-align: center}
+.water{width:100%;margin-top:18rpx;}
+.time-set{width: 200rpx;margin-top:10rpx;margin-right: 40rpx}
+.comfig{width: 200rpx;margin-top: 80rpx}
+.icon-tianjia{font-size: 40rpx ;color:#fc9366;margin-right: 30rpx}
+.line{width: 87rpx;text-align: center;line-height: 106rpx}
+
+/* 提交 */
+
+.submit1{background: #0194dd;margin: 30rpx;font-weight: bold;color: white}
+/* 切换设备 */
+.more{width: 100%;height: 100%;background: rgba(0, 0, 0, 0.2);position: fixed;top: 0;left: 0;right:0;z-index: 999;bottom: 0}
+.change{background: white;margin: 100rpx;border-radius: 15rpx}
+.proList{padding: 20rpx 50rpx;border-bottom: 1px solid #cdcdcd}
+.icon-shanchu{right: 80rpx;top:80rpx;}
+
+/* 温度弹出框 */
+.mask{z-index: 99999999999;bottom: 0;top: 0;left: 0;right: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.2);position: fixed}
+.box{margin: 95rpx 70rpx;background: white;border-radius: 15rpx;height: 500rpx;width: 600rpx}
+.name{padding: 10rpx 20rpx}
+.canvas{position: absolute;
+top: 120rpx;left: 30rpx;
+  width: 600rpx;
+  height: 400rpx;
+  transform: scale(0.9)
+}
+.scoll-h{height: 100%;}

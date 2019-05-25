@@ -1,0 +1,149 @@
+<!--  "pages/mask/mask", -->
+<!-- <view wx:if="{{isHide}}">
+  <view wx:if="{{canIUse}}">
+    <view class='header'>
+      <open-data type="userAvatarUrl"></open-data>
+    </view>
+
+    <view class='content'>
+      <view>申请获取以下权限</view>
+      <text>获得你的公开信息(昵称，头像等)</text>
+    </view>
+
+    <button class='bottom' type='primary' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="bindGetUserInfo">
+      授权登录
+    </button>
+  </view>
+  <view wx:else>请升级微信版本</view>
+</view> -->
+
+<view class="container" id='home'>
+  <!-- 轮播 -->
+  <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval1}}" duration="{{duration}}" style='overflow: hidden'>
+    <block wx:for="{{imgUrls}}">
+      <swiper-item>
+        <image src="{{item}}" class="slide-image" width="100%" style='height:100%' />
+      </swiper-item>
+    </block>
+  </swiper>
+  <!-- 轮播结束 -->
+  <!-- 公告 -->
+  <view class='member-msg dis'>
+    <view class='left fl'>
+      <icon class='iconfont icon-gonggao'></icon>
+      <text class='msg-title'>会员消息</text>
+      <text class='msg-new' style='font-style:italic'>NEW</text>
+      <text class='msg-content dis'>
+  </text>
+    </view>
+    <view class='loop-text right fl'>
+      <!-- <view class="marquee_text" style="{{orientation}}:{{marqueeDistance}}px;font-size: {{size}}px;">
+        {{text}}
+      </view> -->
+      <swiper class="swiper_container" vertical="true" autoplay="true" circular="true" interval="5000">
+        <block wx:for="{{msgList}}">
+          <navigator wx:for="{{msgList}}" open-type="navigate">
+            <swiper-item>
+              <view class="swiper_item">{{item.title}}</view>
+            </swiper-item>
+          </navigator>
+        </block>
+      </swiper>
+    </view>
+    <view class='cleaned'></view>
+
+  </view>
+  <!-- 公告结束 -->
+  <!-- 会员信息 -->
+  <view class='member-detail backg'>
+    <view class='member-mar'>
+      <view class='detail-msg'>
+        <!-- <view class='loading f2'>
+          <button class='loaded f1' open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="bindGetUserInfo">登入/注册</button>
+          登入后了解更多会员信息...
+        </view> -->
+        <view>
+          <view class='msg-img fl'>
+            <!-- <open-data type="userAvatarUrl"></open-data> -->
+            <image class="avatar" src='{{avatarUrl}}' style='width:100%;height:100%'></image>
+          </view>
+          <view class='load'>
+            <view class='msg-user fl'>
+              <view class='msg-top'>
+                <view class='user-name fl'>
+                  <view class='dis f1'>
+                    <!-- <open-data type="userNickName"></open-data> -->
+                    {{nickName}}
+                  </view>|
+                  <view class='dis f2 mem-logo'>
+                    <view class='iconfont icon-huiyuan dis'></view>普通会员</view>
+                  <view class='user-num f2'>
+                    <open-data type="getPhoneNumber"></open-data>
+                  </view>
+                </view>
+                <view class='msg-date fr f2'>{{date}}</view>
+                <view class='cleaned'></view>
+              </view>
+              <view class='msg-bot'>
+                <icon class='iconfont icon-dingwei'></icon>
+                <text class='msg-address f1'>{{address}}</text>
+              </view>
+            </view>
+          </view>
+          <view class='cleaned'></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 会员结束 -->
+  <!-- 功能 -->
+  <view class='feature'>
+
+    <view class='dis' bindtap='toMy'>
+      <text class='fe-my backcol iconfont icon-ziyuanxhdpi dis'></text>
+      <view class='te-al f2'>{{dataList[0].name}}</view>
+    </view>
+    <!-- <navigator
+    url="./mySet/mySet"
+    hover-class="navigator-hover"
+  >
+  </navigator> -->
+
+    <view class='dis' bindtap='toSet'>
+      <text class='fe-set backcol iconfont icon-baoxiu dis'></text>
+      <view class='te-al f2'>{{dataList[1].name}}</view>
+    </view>
+    <view class='dis rela' bindtap='toBad'>
+      <text class='fe-bad backcol iconfont icon-gaojing dis'></text>
+      <view class='point abso' wx:if="{{isHide}}"></view>
+      <view class='te-al f2'>{{dataList[2].name}}</view>
+
+    </view>
+    <view class='dis' bindtap='toMsg'>
+      <text class='fe-msg backcol iconfont icon-xiaoxi dis'></text>
+      <view class='te-al f2'>{{dataList[3].name}}</view>
+    </view>
+  </view>
+  <!-- 功能结束 -->
+  <!-- 统计 -->
+  <view class='count backg'>
+    <view class='count-ele fl count-size'>
+      <view class='ele-img fl'></view>
+      <view class='ele-text fl f3'>
+        <view>本月能耗用电</view>
+        <view>30kw.h</view>
+      </view>
+      <view class='cleaned'></view>
+    </view>
+    <view class='count-price fr count-size'>
+      <view class='ele-img fl'></view>
+      <view class='ele-text fl f3'>
+        <view>本月能耗消费</view>
+        <view>100￥</view>
+      </view>
+      <view class='cleaned'></view>
+    </view>
+    <view class='cleaned'></view>
+  </view>
+  <!-- 统计结束 -->
+</view>

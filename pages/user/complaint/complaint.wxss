@@ -1,0 +1,58 @@
+/* pages/user/complaint/complaint.wxss */
+.content{padding: 15rpx}
+.iconfont{ color: #0194dd}
+.icon-tianjia{font-size: 50rpx}
+.container{padding: 0 20rpx}
+.list{margin: 15rpx 0 0 0;width:100%;overflow: hidden}
+.top{padding: 0 15rpx;}
+.detail{padding: 0 20rpx;}
+.title{color: white;width: 400rpx}
+.time{width: 150rpx}
+.name{width: 67%;}
+.grade{width: 33%}
+/* 超出省略 */
+.word{ width: 330px;
+        overflow:hidden;
+        text-overflow:ellipsis; 
+        white-space: nowrap;}
+.mask {
+  /* text-align: center; */
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 99;
+  top: 0;
+  left: 0;
+  padding: 0 20rpx;
+}
+.box {
+  margin: 20rpx;
+  width: 630rpx;
+  padding: 20rpx;
+}
+.masked {
+  /* text-align: center; */
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.2);
+  z-index: 99;
+  top: 0;
+  left: 0;
+  padding: 0 20rpx;
+}
+.boxed {
+  background: white;
+ 
+  margin: 20rpx;
+  width: 630rpx;
+  padding: 20rpx;
+ 
+}
+.icon-shanchu {
+  top: -25rpx;
+  right: -1rpx;
+
+}
+

@@ -1,0 +1,143 @@
+<!--pages/home/myMsg/myMsg.wxml-->
+<view class='container f3' id='myMsg'>
+  <view class='topTabSwiper'>
+    <view class='table fixed'>
+      <view class='tab  {{currentData == 0 ? "tabBorer" : ""}}' data-current="0" bindtap='checkCurrent'>信息公告</view>
+      <view class='tab  {{currentData == 1 ? "tabBorer" : ""}}' data-current="1" bindtap='checkCurrent'>我的评价</view>
+    </view>
+    <swiper current="{{currentData}}" class='swiper' style="height:900px;" duration="300" bindchange="bindchange">
+      <!-- 信息公告 -->
+      <view class='swiperList'>
+        <swiper-item>
+        <scroll-view scroll-y="true">
+          <view class='list h8' wx:for="{{dataArr}}">
+            <view class='te-al'>
+              <text class='time f2'>{{item.time}}</text>
+            </view>
+            <view class='content white bo'>
+              <view class='title f4'>{{item.title}}</view>
+              <view class='main color'>{{item.main}}</view>
+              <view class='more' bindtap='{{item.mored}}'>{{item.more}}</view>
+            </view>
+          </view>
+          </scroll-view>
+        </swiper-item>
+        <!-- 信息公告结束 -->
+        <!-- 我的评价 -->
+        <swiper-item>
+          <view class='assess white bo'>
+            <view class='user fl'>
+              <view class='userImg'>
+                <open-data class="wxImg" type="userAvatarUrl"></open-data>
+              </view>
+              <open-data type="userNickName"></open-data>
+              <view class='userName'></view>
+            </view>
+            <view class='all fl h8'>
+              <view class='allTit color'>全部评价</view>
+              <view class='allCont'>{{toBe.length+hadAss.length}}</view>
+            </view>
+            <view class='img fl h8'>
+              <view class='imgTit color'>有图评价</view>
+              <view class='imgCont'>3</view>
+            </view>
+            <view class='cleaned'></view>
+          </view>
+
+          <view class='bottomSwiper fixed'>
+            <view class='tabled'>
+              <view class='tab1  {{currentData1 == 0 ? "tabBorer1" : ""}}' data-current="0" bindtap='checkCurrent1'>待评价({{toBe.length}})</view>
+              <view class='tab1  {{currentData1 == 1 ? "tabBorer1" : ""}}' data-current="1" bindtap='checkCurrent1'>已评价（{{hadAss.length}}）</view>
+            </view>
+            <swiper current="{{currentData1}}" class='swiper1' style="height:900px; width:700rpx" duration="300" bindchange="bindchange1">
+              <!-- 待评价 -->
+              <view class='swiperItem'>
+                <swiper-item>
+                  <view class='listed white' wx:for="{{toBe}}" wx:key="key">
+                    <view class='fl named h7'>{{item.title}}</view>
+                    <view class=' fr toBeAss h7'>待评价</view>
+                    <view class='cleaned'></view>
+                    <view class='conntented'>
+                      <view class='image fl bo'></view>
+                      <view class='setTime fl color  h6'>
+                        <view>报修时间：{{item.timed}}</view>
+                        <view>维修时间：{{item.time}}</view>
+                        <view>处理结果：{{item.result}}</view>
+                      </view>
+                      <view class='cleaned'></view>
+                      <view class='assessed fr h3 dis' bindtap='toAssess'>评价</view>
+                      <view class='mored fr h3 dis' bindtap='lookDel' data-id='{{item.id}}'>查看详情</view>
+                      <view class='cleaned'></view>
+                    </view>
+                  </view>
+
+
+                </swiper-item>
+                <!-- 已评价 -->
+                <swiper-item>
+                  <view class='box white h4 bo' wx:for="{{hadAss}}">
+                    <view class='userImg fl'>
+                      <open-data class="wxImg" type="userAvatarUrl"></open-data>
+                    </view>
+                    <view class='fr box-right'>
+                      <view class='userName fl'>
+                        <open-data type="userNickName"></open-data>
+                        <view class='service f2'>服务</view>
+                      </view>
+                      <view class='fr '>{{item.time}}</view>
+                      <view class='cleaned'></view>
+                      <view class='label color f2 iconfont icon-biaoqian'>{{item.remark}}</view>
+                      <view class='boxDetail dis'>
+                        <view class='imgUrl fl dis'>
+                          <image src="{{item.imgUrl}}" class='dis imgUrl1' width="100rpx" style='height:100rpx'></image>
+                        </view>
+                        <view class='fl boxName h8'> {{item.name}}</view>
+                        <view class='fr iconfont icon-gengduo h10'></view>
+                      </view>
+                      <view class='cleaned'></view>
+                      <view class='assessed fr h3 dis'>分享评价</view>
+                      <view class='mored fr h3 dis' bindtap='delate' data-index="{{index}}">删除评价</view>
+                      <view class='cleaned'></view>
+                    </view>
+                    <view class='cleaned'></view>
+                  </view>
+                </swiper-item>
+              </view>
+              <!-- 已评价结束 -->
+            </swiper>
+          </view>
+        </swiper-item>
+      </view>
+      <!-- 我的评价结束 -->
+    </swiper>
+  </view>
+
+  <!-- 信息公告查看详情 -->
+  <view class='mask moreDetail' wx:if='{{isHide}}'>
+    <view class='boxed white bo rela' wx:for='{{moreDetail}}'>
+      <text class='iconfont icon-shanchu abso' bindtap='back1'></text>
+      <view class='title f4'>{{item.title}}</view>
+      <view class='imaged'>
+        <image></image>
+      </view>
+      <view class='text'> {{item.main}}</view>
+    </view>
+
+
+
+  </view>
+  <!-- 查看详情结束 -->
+  <!-- 评价详情 -->
+  <view class='mask lookDel' wx:if='{{isHided}}'>
+    <view class='detailBox rela bo white'>
+    <view class='iconfont icon-shanchu abso' bindtap='back'></view>
+      <view class='detailTitle'></view>
+      <view class='detailStar'></view>
+      <view class='detailWord'></view>
+      <view></view>
+      <view></view>
+    </view>
+  </view>
+  <!-- 评价详情结束 -->
+
+</view>

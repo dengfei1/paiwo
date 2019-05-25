@@ -1,0 +1,73 @@
+<!--pages/home/mySet/mySet.wxml-->
+<view>
+  <view class='container f3' id='mySet'>
+    <view class='top white color h9'>
+      <view class='top-left ma20 fl '>已绑定设备 {{list.length}}</view>
+      <view class='top-right fr iconfont icon-tianjia' bindtap='showRule'></view>
+      <view class='cleaned'></view>
+    </view>
+    <view class="cont">
+      <!-- 列表 -->
+      <view wx:for="{{list}}" wx:key="index" class="list f3 h7 color">
+        <!-- 滑动删除 -->
+        <view bindtouchstart="touchS" bindtouchmove="touchM" bindtouchend="touchE" data-index="{{index}}" style="{{item.shows}}" class="list_del txt">
+          <!-- 列表图片 -->
+          <view class='img'>
+            <image></image>
+          </view>
+         <view class='item'>
+          <view>项目名称：{{item.name}}</view>
+          <view>设备编号：{{item.num}}</view>
+          <view>设备类型：{{item.type}}</view>
+          <view>项目型号：{{item.model}}</view>
+          <view>激活时间：{{item.time}}</view>
+          <view class='addressLen'>项目地址：{{item.address}}</view>
+          </view>
+        </view>
+        <!-- 删除 -->
+        <view data-index="{{index}}" bindtap="delItem" class="list_del del">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部 -->
+  <view class="mask {{isRuleTrue?'isRuleShow':'isRuleHide'}} h10 f3" bindtap='hideRule'>
+    <view class='maskSel white'>
+      <view class='mask-QR maskLine' bindtap="click">
+        <text class="iconfont icon-saomiao"></text>扫描绑定</view>
+      <view class='mask-input maskLine' bindtap='write'>
+        <text class="iconfont icon-shuru"></text>输入绑定</view>
+    </view>
+  </view>
+
+  <!-- 输入绑定详情 -->
+  <view class="write f3 " wx:if="{{isHide}}">
+    <form bindsubmit="formSubmit" bindreset="formReset">
+      <view class='box white rela'>
+        <text class='iconfont icon-shanchu abso to0 ri10' bindtap='back'></text>
+        <view class='list h6'>
+          <view>项目名称
+            <input class='dis name size' name="name" maxlength="15" placeholder=" *请输入联系人姓名" type="text" confirm-type="next"></input>
+          </view>
+          <view>设备编号
+            <input class='dis num size' type='text' name='num'></input>
+          </view>
+          <view>设备类型
+            <input class='dis type size' type='text' name='type'></input>
+          </view>
+          <view>项目型号
+            <input class='dis model size' type='text' name='size'></input>
+          </view>
+          <view>激活时间
+            <input class='dis time size' type='num' name='time'></input>
+          </view>
+          <view>项目地址
+            <input class='dis address size' type='text' name='address'></input>
+          </view>
+        </view>
+        <button class='submit' form-type="submit">提 交</button>
+      </view>
+    </form>
+  </view>
+</view>
+

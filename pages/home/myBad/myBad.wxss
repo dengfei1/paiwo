@@ -1,0 +1,8 @@
+/* pages/home/myBad/myBad.wxss */
+.container{padding: 0 20rpx}
+.list{margin: 15rpx 0 0 0;color: #ee8308a9;width:100%;overflow: hidden}
+.top{padding: 0 15rpx;}
+.detail{padding: 0 20rpx;}
+.title{color: white;width: 100%}
+.name{width: 67%;}
+.grade{width: 33%}

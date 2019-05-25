@@ -1,0 +1,75 @@
+<view class="container f3">
+
+  <view class='logo te-al'>
+    <image src='/images/logo.png' style='width:200rpx;height:100rpx'></image>
+  </view>
+  <!-- 验证码登录 -->
+  <view wx:if="{{isHiddend}}">
+    <view class='row'>
+      <input placeholder='请输入手机号' name='phone' type='number' bindinput='bindPhoneInput1' />
+    </view>
+    <view class='row'>
+      <input placeholder='请输入用户名' name='userName' type='text' bindinput='bindNameInput' />
+    </view>
+    <view class='row'>
+      <input placeholder='输入密码' name='password' type='password' bindinput='bindPasswordInput' />
+    </view>
+    <view class='h9'>
+      <text class='f1 fr register' bindtap='register'>注册 </text>
+      <text class='f1 fr load' bindtap='toIdentify'>验证码登录 |</text>
+    </view>
+    <view class='cleaned'></view>
+  </view>
+  
+  <!-- 密码登录 -->
+  <view wx:else>
+    <view class='row'>
+      <input placeholder='请输入手机号' type='number' bindinput='bindPhoneInput' name='phone' />
+    </view>
+    <view class='row'>
+      <input class='fl' placeholder='请输验证码' bindinput='bindCodeInput' style='width:400rpx' name='code' />
+      <button class='codeBtn fr f1' bindtap='getCode' hidden='{{hidden}}' disabled='{{btnDisabled}}'>{{btnValue}}</button>
+      <view class='cleaned'></view>
+    </view>
+    <!-- <br/>
+    <view>
+      <button bindtap='getCode' hidden='{{hidden}}' disabled='{{btnDisabled}}'>22123</button>
+    </view> -->
+    <view class='h9'>
+      <text class='f1 fr register' bindtap='register'>注册 </text>
+      <text class='f1 fr load' bindtap='toPassword'>密码登录 |</text>
+    </view>
+    <view class='cleaned'></view>
+  </view>
+  <!-- <view class='row'>
+     <input placeholder='请输验证码' bindinput='bindCodeInput' style='width:70%;'/> 
+     <button class='codeBtn' bindtap='getCode' hidden='{{hidden}}' disabled='{{btnDisabled}}'>{{btnValue}}</button>
+  </view> -->
+  <view>
+    <button class='submit' bindtap='save'>登 录</button>
+  </view>
+  <!-- 注册弹框 -->
+  <view class='registerMask' wx:if='{{isHide}}'>
+    <form bindsubmit='formSubmit'>
+      <view class='box bo white rela'>
+        <view class='abso iconfont icon-shanchu' bindtap='back'></view>
+        <view class='title te-al f4'>注册</view>
+        <view class='row'>
+          <input placeholder='请输入手机号' type='number' bindinput='bindPhoneInput' name="phone" />
+        </view>
+        <view class='row'>
+          <input placeholder='请输入密码' type='password' bindinput='bindPasswordInput' name="password"></input>
+        </view>
+        <view class='row'>
+          <input placeholder='请再次输入密码' type='password' bindinput='bindPasswordInput1' name="password"></input>
+        </view>
+        <view class='row'>
+          <input class='fl' placeholder='请输验证码' bindinput='bindCodeInput' style='width:400rpx;' name="code" />
+          <button class='codeBtn fr f1' bindtap='getCode' hidden='{{hidden}}' disabled='{{btnDisabled}}'>{{btnValue}}</button>
+          <view class='cleaned'></view>
+        </view>
+        <button form-type="submit" class='submit' bindtap='regis'>注 册</button>
+      </view>
+    </form>
+  </view>
+</view>
