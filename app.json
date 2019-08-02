@@ -1,31 +1,58 @@
 {
   "pages": [
-    "pages/home/myMsg/myMsg",
-    "pages/home/home",
-    "pages/user/complaint/complaint",
-    "pages/run/run",
-  
     "pages/mask/mask",
+    "pages/user/complaint/complaint",
+    
+    
+   "pages/energy/energy",
+    "pages/run/run",
+    "pages/home/home",
+    "pages/home/mySet/mySet",
+    "pages/home/assess/assess",
+    "pages/aa/aa",
+    "pages/home/myBad/myBad",
+    "pages/home/myMsg/myMsg",
     "pages/user/detailMsg/detailMsg",
     "pages/user/our/our",
-    
-    "pages/home/myBad/myBad",
     "pages/home/myMsg/assess/assess",
-    "pages/aa/aa",
-    "pages/user/touch/touch",
-    "pages/home/mySet/mySet",
     "pages/home/feSet/feSet",
     "pages/user/user",
-    "pages/energy/energy",
-    "pages/user/suggest/suggest",
+    "pages/home/suggest/suggest",
+    "pages/user/customerMsg/customerMsg",
     "pages/logs/logs",
-    "pages/index/index"
+    "pages/index/index",
+    "pages/text/text",
+    "pages/user/complaint/details/details",
+    "pages/user/complaint/compType/compType",
+    "pages/user/complaint/compDetails/compDetails",
+    "pages/run/moreEquipment/moreEquipment",
+    "pages/home/mySet/deviceDetails/deviceDetails",
+    "pages/user/service/service",
+    "pages/user/servicePromise/servicePromise",
+    "pages/home/MyAssess/MyAssess",
+    "pages/home/progress/progress",
+    "pages/home/feSet/uuId/uuId",
+    "pages/home/feSet/modelName/modelName",
+    "pages/home/feSet/faultDescription/faultDescription",
+    "pages/home/feSet/userName/userName",
+    "pages/home/feSet/tel/tel",
+    "pages/home/feSet/address/address",
+    "pages/home/touch/touch",
+    "pages/home/touch/provinces/provinces",
+    "pages/home/touch/citys/citys",
+    "pages/home/touch/countys/countys",
+    "pages/home/suggest/addSuggest/addSuggest",
+    "pages/home/suggest/suggestDetails/suggestDetails",
+    "pages/home/assesDetails/assesDetails",
+    "pages/home/information/information",
+    "pages/home/myBad/badDetails/badDetails"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "首页",
-    "navigationBarTextStyle": "black"
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true
   },
   "debug": true,
   "sitemapLocation": "sitemap.json",
@@ -44,12 +71,7 @@
         "iconPath": "images/sz.png",
         "selectedIconPath": "images/sz1.png"
       },
-      {
-        "pagePath": "pages/energy/energy",
-        "text": "数据",
-        "iconPath": "images/nh.png",
-        "selectedIconPath": "images/nh1.png"
-      },
+   
       {
         "pagePath": "pages/user/user",
         "text": "我的",

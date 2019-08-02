@@ -14,6 +14,13 @@ const formatDate = date => {
   const day = date.getDate()
   return [year, month, day].map(formatNumber).join('/')
 }
+// 获取日期
+const formatDated = date => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  return [year, month, day].map(formatNumber).join('/')
+}
 // 获取年份
 const formatYear = date => {
   const year = date.getFullYear()

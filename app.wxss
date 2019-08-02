@@ -1,5 +1,7 @@
 /**app.wxss**/
 @import "pages/icon/icon.wxss";
+@import "pages/icon/icon1.wxss";
+
 page{color: #5d5d5d; background: #efefef;}
 /* 浮动 */
 .fl{float: left;}
@@ -36,7 +38,7 @@ page{color: #5d5d5d; background: #efefef;}
 .le30{left: 30rpx}
 .ri10{right: 10rpx}
 .ri15{right: 15rpx}
-.ri20{right: 20rpx}
+.ri20{right: 46rpx}
 .ri30{right: 30rpx}
 .to0{top: 0}
 /* 边框 */
@@ -55,3 +57,24 @@ page{color: #5d5d5d; background: #efefef;}
 .pa30{padding-left:30rpx; }
 /* 提交 */
 .submit{background: #0194dd;margin: 30rpx;font-weight: bold;color: white}
+/* 隐藏滚动条 */
+::-webkit-scrollbar {display: none;}
+
+.echarts{
+  position: absolute;
+  top:94rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+} 
+
+ec-canvas {
+  width: 100%;
+  height: 100%;
+}

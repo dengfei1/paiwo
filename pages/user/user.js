@@ -1,41 +1,76 @@
 var util = require('../../utils/util.js');
+// 引入SDK核心类
+var QQMapWX = require('../../tools/qqmap-wx-jssdk.min.js');
 
+// 实例化API核心类
+var demo = new QQMapWX({
+  key: 'AHDBZ-ZKDW6-AZISE-ELXTA-OL4CT-DZBVL' // 必填
+});
 
 Page({
   data: {
     date: '',
     address: '',
-    // dataArr: ["我的消息", "建议反馈", "联系客服", "关于我们"],
-    // dataIcon: ["iconfont icon-xiaoxi", "iconfont icon-lingdang", "iconfont icon-service", "iconfont icon-guanyuwomen"],
     userInfo: '',
     nickName: '',
     avatarUrl: '',
-
-  dataArr: [{
-    name: '我的消息',
+    tel:'',
+  dataArr: [
+    {
+    name: '客户信息',
     dataIcon: 'iconfont icon-xiaoxi',
-    toMsg:'toMsg'
-  }, {
-      name: '建议反馈',
-      dataIcon: 'iconfont icon-lingdang',
-      toMsg: 'toSugget'
-  }, {
-      name: '联系客服',
-      dataIcon: 'iconfont icon-service',
-      toMsg: 'toTouch'
-    } , {
-      name: '投诉中心',
+    toMsg:'toCustomerMsg'
+     }, 
+    //  {
+    //   name: '建议反馈',
+    //   dataIcon: 'iconfont icon-lingdang',
+    //   toMsg: 'toSugget'
+    // }, 
+     {
+      name: '客户投诉',
       dataIcon: 'iconfont icon-tousu',
       toMsg: 'toComp'
-    }, {
+    }, 
+    {
+      name: '客服支持',
+      dataIcon: 'iconfont icon-service',
+      toMsg: 'toTouch'
+    },
+    {
       name: '关于我们',
       dataIcon: 'iconfont icon-guanyuwomen',
       toMsg:'toOur'
-      }]
+      }],
+    storageData:''
   },
 
 onLoad: function() {
-  this.getCityNameOFLocation();
+  // 调用接口,需要引入SDK核心类
+  wx.getLocation({
+    type: 'gcj02',
+    success: function (res) {
+      var latitude = res.latitude//纬度
+      var longitude = res.longitude//经度
+      demo.reverseGeocoder({
+        location: {
+          latitude: latitude,
+          longitude: longitude
+        },
+        success: function (res) {
+          console.log(res);
+          let province = res.result.address_component.province;//省份
+          let city = res.result.address;//城市
+          that.setData({
+            address: city
+          })
+        },
+        fail: function (res) {
+          console.log(res);
+        }
+      });
+    }
+  });
+  //this.getCityNameOFLocation();
   console.log("1");
   var that = this;
   // 获取日期
@@ -58,15 +93,22 @@ onLoad: function() {
         nickName: nickName,
         avatarUrl: avatarUrl
       })
-
     }
   })
+
+  var userList = wx.getStorageSync('userList')
+  var phone = userList.user.data.currentUser.phone
+  //实现手机号码中间4位用星号（*）替换显示
+  var tel = phone;
+  this.setData({
+    tel: tel.replace(/(1[358]{1}[0-9])[0-9]{4}([0-9]{4})/i, "$1****$2")
+  })
 },
-  // 跳转到我的消息
-toMsg:function(){
+  // 跳转到客户信息
+toCustomerMsg:function(){
   console.log(123)
   wx.navigateTo({
-    url: "../../pages/home/myMsg/myMsg"
+    url: "customerMsg/customerMsg"
   })
 },
 //跳转到投诉中心
@@ -91,7 +133,7 @@ toMsg:function(){
   },
   toTouch:function(){
     wx.navigateTo({
-      url: "./touch/touch"
+      url: "./servicePromise/servicePromise"
     })
   },
   toOur:function(){
@@ -99,49 +141,23 @@ toMsg:function(){
       url: "./our/our"
     })
   },
-// 获取地址
-getCityNameOFLocation: function() {
-  var that = this;
-  wx.getLocation({
-    type: 'gcj02', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
-    success: function(res) {
-      console.log("定位成功");
-      var locationString = res.latitude + "," + res.longitude;
-      wx.request({
-        url: 'https://apis.map.qq.com/ws/geocoder/v1/?&get_poi=1',
-        data: {
-          "key": "AHDBZ-ZKDW6-AZISE-ELXTA-OL4CT-DZBVL",
-          "location": locationString
-        },
-        method: 'GET',
-        // header: {}, 
-        success: function(res) {
-          // success
-          console.log("请求成功");
-          console.log("请求数据:" + res.data.result.address);
-          var address = res.data.result.address;
-          that.setData({
-            address: address
-          })
-        },
-        fail: function() {
-          // fail
-          console.log("请求失败");
-        },
-        complete: function() {
-          // complete
-          console.log("请求完成");
-        }
-      })
-    },
-    fail: function() {
-      // fail
-      console.log("定位失败");
-    },
-    complete: function() {
-      // complete
-      console.log("定位完成");
-    }
-  })
-},
+// 退出登录
+  backLoad:function(){
+    wx.showModal({
+      title: '提示',
+      content: '退出登录？',
+      success: function (res) {
+       if(res.confirm){
+         wx.reLaunch({
+           url: '/pages/aa/aa',
+         })
+         //  清除本地缓存
+         var that = this;
+         wx.removeStorage({
+           key: 'userList'
+         })
+       }
+      }
+    })
+  }
 })

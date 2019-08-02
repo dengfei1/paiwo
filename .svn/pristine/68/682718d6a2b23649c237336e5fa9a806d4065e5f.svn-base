@@ -1,0 +1,38 @@
+<!--pages/home/feSet/feSet.wxml-->
+<form bindsubmit="formSubmit" bindreset="formReset">
+  <view class='container white h6 f3' id='feSet'>
+
+    <view class='question f4'>问题和建议</view>
+    <view class='textarea'>
+      <textarea name="name1" bindblur="bindTextAreaBlur" auto-height placeholder="*请详细描述您的问题和建议" />
+    </view>
+    <view class='updata f4'>上传故障图片</view>
+    <view class="gallery">
+
+      <view class="item dis" wx:for="{{images}}" wx:key="">
+        <image src="{{item}}" data-src="{{item}}" bindtap="previewImage" mode="aspectFill" />
+
+        <!-- 删除按钮 -->
+        <view class="delete" bindtap="delete" data-index="{{index}}">
+          <text class='iconfont icon-shanchu'></text>
+        </view>
+      </view>
+      <view class="item" bindtap="chooseImg">
+        <view class='addIcon'>+</view>
+      </view>
+    </view>
+
+
+    <view class='msg f4'>联系人信息</view>
+    <view class="section">
+      <input name="name" maxlength="4" placeholder=" *请输入联系人姓名" class=' h8 f2' type="text" confirm-type="next" />
+    </view>
+    <view name="mobile" class="section">
+      <input name="tel" class=' h8 f2' type="number" maxlength="11" placeholder="*请填写您的手机号" bindblur="mobileBlurFocus" />
+    </view>
+    <view class="section">
+      <input name="address" placeholder=" *请输入联系地址" class='h8 f2' type='text' />
+    </view>
+  </view>
+  <button class='submit' form-type="submit">提 交</button>
+</form>

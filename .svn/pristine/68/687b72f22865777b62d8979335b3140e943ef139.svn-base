@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "运行",
+  "usingComponents": {
+    "ec-canvas": "../../ec-canvas/ec-canvas"
+  }
+}

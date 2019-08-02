@@ -1,0 +1,67 @@
+{
+  "pages": [
+   "pages/run/run",
+    "pages/energy/energy",
+    
+    "pages/mask/mask",
+    "pages/home/home",
+    "pages/home/mySet/mySet",
+    "pages/aa/aa",
+    "pages/home/myBad/myBad",
+    "pages/home/myMsg/myMsg",
+    "pages/user/complaint/complaint",
+    "pages/user/detailMsg/detailMsg",
+    "pages/user/our/our",
+    "pages/home/myMsg/assess/assess",
+    "pages/user/touch/touch",
+    "pages/home/feSet/feSet",
+    "pages/user/user",
+    
+    "pages/user/suggest/suggest",
+    "pages/logs/logs",
+    "pages/index/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "首页",
+    "navigationBarTextStyle": "black",
+    "enablePullDownRefresh": true
+  },
+  "debug": true,
+  "sitemapLocation": "sitemap.json",
+  "tabBar": {
+    "selectedColor": "#1296db",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页",
+        "iconPath": "images/sy.png",
+        "selectedIconPath": "images/sy1.png"
+      },
+      {
+        "pagePath": "pages/run/run",
+        "text": "运行",
+        "iconPath": "images/sz.png",
+        "selectedIconPath": "images/sz1.png"
+      },
+      {
+        "pagePath": "pages/energy/energy",
+        "text": "数据",
+        "iconPath": "images/nh.png",
+        "selectedIconPath": "images/nh1.png"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "text": "我的",
+        "iconPath": "images/wo.png",
+        "selectedIconPath": "images/wo1.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  }
+}

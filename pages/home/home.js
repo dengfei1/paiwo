@@ -6,9 +6,14 @@ var demo = new QQMapWX({
   key: 'AHDBZ-ZKDW6-AZISE-ELXTA-OL4CT-DZBVL' // 必填
 });
 var zhenzisms = require('../../utils/zhenzisms.js');
+var app = new getApp();
+
+var http = require("../../utils/http.js")
+
+
+
 Page({
   data: {
-    isHide: true,
     text: '这是一条会滚动的文字滚来滚去的文字跑马灯，哈哈哈哈哈哈哈哈',
     marqueePace: .5, //滚动速度
     marqueeDistance: 0, //初始滚动距离
@@ -17,38 +22,10 @@ Page({
     marquee2_margin: 60,
     size: 14,
     orientation: 'left', //滚动方向
-    dataArr: [{
-      tiete: '安子岭123',
-      name: '不通电123',
-      grade: '三级',
-      code: 'HDJKS-388',
-      suggest: '换个电源',
-      color: '#fe6000',
-      aa: '5566'
-    },
-    {
-      tiete: '安子岭234',
-      name: '不通电234',
-      grade: '三级',
-      code: 'HDJKS-388',
-      suggest: '换个电源',
-      color: '#fe6000',
-      aa: '5566'
-    },
-    {
-      tiete: '安子岭345',
-      name: '不通电345',
-      grade: '三级',
-      code: 'HDJKS-388',
-      suggest: '换个电源',
-      color: '#fe6000',
-      aa: '7788'
-    }
-    ],
+    dataArr: [],
     userInfo:'',
     nickName:'',
     avatarUrl:'',
-
     step: 1, //滚动速度
     distance: 0, //初始滚动距离
     space: 30,
@@ -56,7 +33,8 @@ Page({
     date: '',
     isHide: false,
     address: '',
-    dataList: [{
+    dataList: [
+      {
         name: '我的设备',
         url: 'mySet/mySet',
         color: '#3a83fc'
@@ -70,39 +48,42 @@ Page({
         url: ''
       },
       {
-        name: '我的信息',
+        name: '我的消息',
+        url: ''
+      },
+      {
+        name: '进度查询',
+        url: ''
+      },
+      {
+        name: '建议反馈', 
+        url: 'suggest/suggest'
+      },
+      {
+        name: '服务网点',
+        url: ''
+      },
+      {
+        name: '我的评价',
         url: ''
       },
     ],
     LsitA: [],
-    msgList: [{
-        url: "url",
-        title: "多地首套房贷利率上浮 热点城市渐迎零折扣时代"
-      },
-      {
-        url: "url",
-        title: "交了20多年的国内漫游费将取消 你能省多少话费？"
-      },
-      {
-        url: "url",
-        title: "北大教工合唱团出国演出遇尴尬:被要求给他人伴唱"
-      }
-    ],
-
+    msgList:[],
     // 轮播图片
-    imgUrls: [
-      "images/img1.jpg",
-      "images/img2.jpg",
-      "images/img3.jpg"
-    ],
-    textSwiper: ["滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告滚动公告"],
+    imgUrls: [],
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
     indicatorDots: true,
     autoplay: true,
     interval: 5000,
-    duration: 1000
+    duration: 1000,
+    tel:'',
+    code: '',
+    iv: '',
+    wxCode: '',
+    openId: '',
   },
   onShow: function() {
     // 页面显示
@@ -115,6 +96,8 @@ Page({
       marquee2_margin: length < windowWidth ? windowWidth - length : that.data.marquee2_margin //当文字长度小于屏幕长度时，需要增加补白
     });
     that.run(); // 水平一行字滚动完了再按照原来的方向滚动
+   
+
   },
   run: function() {
     var that = this;
@@ -123,7 +106,6 @@ Page({
         that.setData({
           marqueeDistance: that.data.marqueeDistance - that.data.marqueePace,
         });
-
       } else {
         clearInterval(interval);
         that.setData({
@@ -135,6 +117,7 @@ Page({
     }, that.data.interval);
 
   },
+  // 公告栏滚动
   scrollling: function() {
     var that = this;
     var length = that.data.length; //滚动文字的宽度
@@ -155,8 +138,34 @@ Page({
       }
     }, that.data.interval);
   },
-  onReady() {},
 
+
+  onReady() {  
+  
+   
+  },
+/**
+ * 轮播图切换事件
+ */
+  swiperCurrent:function(e){
+      this.setData({
+        current:e.detail.current
+      })
+  },
+/**
+ * 跳转资讯推介
+ */
+  swiperClick:function(e){ 
+    let { imgUrls}=this.data
+    console.log(imgUrls)
+    var index = e.currentTarget.dataset.index;
+    console.log(index)
+    var objInf = encodeURIComponent(JSON.stringify(imgUrls[index]))
+    console.log("资讯推介", objInf)
+    wx:wx.navigateTo({
+      url: './information/information?objInf=' + objInf
+    })
+  },
   // 跳转我的设备
   toMy: function() {
     wx.navigateTo({
@@ -176,27 +185,94 @@ Page({
   toMsg: function() {
     wx.navigateTo({
       url: "./myMsg/myMsg"
+    }) 
+  },
+  toSchedule: function () {
+    wx.navigateTo({
+      url: "./progress/progress"
     })
   },
-  onLoad() {
+  toSuggest: function () {
+    wx.navigateTo({
+      url: "./suggest/suggest"
+    })
+  },
+  toService: function () {
+    wx.navigateTo({
+      url: "./touch/touch"
+    })
+  },
+  toAssess: function () {
+    wx.navigateTo({
+      url: "./MyAssess/MyAssess"
+    })
+  },
+  onLoad:function(){
     var that = this;
-    // 判断是否有故障
-    var dataArr = that.data.dataArr;
-    for(let i = 0; i < dataArr.length; i++){
-      if (dataArr[i].aa == '7788'){
-        that.setData({
-          isHide: true
-        })
-     
-      }
-    }
+    var use = wx.getStorageSync('apply')
+    console.log(use,'apply')
     
+    // wx.getSetting({
+    //   success(res){
+    //     if (!res.authSetting['scope.userInfo']){
+    //       wx.navigateTo({
+    //         url: '/pages/aa/aa',
+    //       })
+    //     }
+    //   }
+    // })
 
-    this.getCityNameOFLocation();
-    console.log("1");
+    //获取用户信息
+    // var userList = wx.getStorageSync('userList')
+    // console.log("userList", userList)
+    // var userid = userList.user.data.currentUser.id
+    // var params = {
+    //   url: '/report/findAllWxReport?userId=' + userid ,
+    //   method: "POST",
+    //   callBack: (res) => { 
+    //     console.log('获取告警信息', res)
+    //     if (res.data.length>0){
+    //       that.setData({
+    //         isHide: true,
+    //         dataArr: res.data
+    //       })
+    //     }
+    //   }
 
-    // 调用接口,需要引入SDK核心类
-    /* wx.getLocation({
+    // }
+    // http.request(params)
+
+
+    //获取轮播图数据
+    var params = {
+      url: '/postInformation/findAll',
+      method: "GET",
+      callBack: (res) => {
+        console.log('获取轮播图数据', res)
+        that.setData({
+          imgUrls: res.data
+
+        })
+      }
+
+    }
+    http.request(params)
+    // 获取公告数据
+    console.log('获取公告数据')
+    var params = {
+      url: '/notice/findAllNews',
+      method: "GET",
+      callBack: (res) => {
+        console.log('获取公告数据', res)
+        that.setData({
+          msgList: res.data
+        })
+      }
+
+    }
+    http.request(params)
+    // 调用接口,需要引入SDK核心类 定位
+     wx.getLocation({
        type: 'gcj02',
        success: function (res) {
          var latitude = res.latitude//纬度
@@ -207,7 +283,7 @@ Page({
              longitude: longitude
            },
            success: function (res) {
-             console.log(res);
+             console.log("定位",res);
              let province = res.result.address_component.province;//省份
              let city = res.result.address;//城市
              that.setData({
@@ -219,10 +295,10 @@ Page({
            }
          });
        }
-     });*/
-// 获取用户信息
-wx.getUserInfo({
-  success: function (res) {
+     });
+  // 获取用户信息
+  wx.getUserInfo({
+    success: function (res) {
     var userInfo = res.userInfo
     var nickName = res.userInfo.nickName
     var avatarUrl = res.userInfo.avatarUrl
@@ -236,9 +312,8 @@ wx.getUserInfo({
       nickName:nickName,
       avatarUrl: avatarUrl
     })
-    
     }
-})
+  })
 
     // 获取当前日期
     var dated = util.formatDate(new Date());
@@ -255,28 +330,102 @@ wx.getUserInfo({
               success: function(res) {
                 // 用户已经授权过,不需要显示授权页面,所以不需要改变 isHide 的值
                 wx.login({
-                  success: res => {
-                    // 获取到用户的 code 之后：res.code
-                    console.log("用户的code:" + res.code);
-                    // 可以传给后台，再经过解析获取用户的 openid
-                    // 或者可以直接使用微信的提供的接口直接获取 openid ，方法如下：
+                  success(res) {
+                    that.setData({
+                      code: res.code
+                    })
+                    wx.getUserInfo({
+                      success: function (res) {
+                        //获取用户敏感数据密文和偏移向量
+                        that.setData({
+                          encryptedData: res.encryptedData
+                        })
+                        that.setData({
+                          iv: res.iv
+                        })
+                        console.log('iv:', res.iv, 'encryptedData:', res.encryptedData)
+                      }
+                    })
 
+                    console.log(res)
+                    if (res.code) {
+                      // 发起网络请求   
+                      wx.request({
+                        url: app.globalData.url + '/login/WXlogin',
+                        data: {
+                          wxCode: res.code
+                        },
+                      })
+                    } else {
+                      console.log('登录失败！' + res.errMsg)
+                    }
                   }
-                });
-
+                })
               }
             });
             // wx.hideTabBar({aniamtion:false});
           } else {
             // 用户没有授权
             // 改变 isHide 的值，显示授权页面
-            that.setData({
-              isHide: true
-            });
+            wx.navigateTo({
+              url: '/pages/mask/mask',
+           })
 
           }
         }
       });
+      var userList = wx.getStorageSync('userList')
+      var phone = userList.user.data.currentUser.phone
+      //实现手机号码中间4位用星号（*）替换显示
+      var tel = phone;
+      this.setData({
+        tel: tel.replace(/(1[358]{1}[0-9])[0-9]{4}([0-9]{4})/i, "$1****$2")
+      })
+
+  
+    // var userList = wx.getStorageSync('userList');
+    
+    // console.log('userList', userList.user.data.sessionId)
+    // app.globalData.header.Cookie = 'JSESSIONID=' + userList.user.data.sessionId;
+    //获取轮播图数据
+    // console.log('获取轮播图数据')
+    // wx.request({
+    //   url: app.globalData.url + '/postInformation/findAll',
+    //   header: app.globalData.header,
+    //   method: "GET",
+    //   data: {
+
+    //   },
+    //   success: (res) => {
+    //     console.log('获取轮播图数据', res)
+    //     that.setData({
+    //       imgUrls:res.data.data
+          
+    //     })
+    //   }
+    // })
+
+    // var userList = wx.getStorageSync('userList');
+
+    // console.log('userList', userList.user.data.sessionId)
+    // app.globalData.header.Cookie = 'JSESSIONID=' + userList.user.data.sessionId;
+
+    // console.log('获取公告数据')
+    // wx.request({
+    //   url: app.globalData.url + '/notice/findMyNo',
+    //   header: app.globalData.header,
+    //   method: "GET",
+    //   data: {
+
+    //   },
+    //   success: (res) => {
+    //     console.log('获取公告数据', res)
+       
+    //   }
+    // })
+
+   
+      
   },
   bindGetUserInfo: function(e) {
     if (e.detail.userInfo) {
@@ -339,50 +488,50 @@ wx.getUserInfo({
     })
   },
   // 位置获取
-  getCityNameOFLocation: function() {
-    var that = this;
-    wx.getLocation({
-      type: 'gcj02', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
-      success: function(res) {
-        console.log("定位成功");
-        var locationString = res.latitude + "," + res.longitude;
-        wx.request({
-          url: 'https://apis.map.qq.com/ws/geocoder/v1/?&get_poi=1',
-          data: {
-            "key": "AHDBZ-ZKDW6-AZISE-ELXTA-OL4CT-DZBVL",
-            "location": locationString
-          },
-          method: 'GET',
-          // header: {}, 
-          success: function(res) {
-            // success
-            console.log("请求成功");
-            console.log("请求数据:" + res.data.result.address);
-            var address = res.data.result.address;
-            that.setData({
-              address: address
-            })
-          },
-          fail: function() {
-            // fail
-            console.log("请求失败");
-          },
-          complete: function() {
-            // complete
-            console.log("请求完成");
-          }
-        })
-      },
-      fail: function() {
-        // fail
-        console.log("定位失败");
-      },
-      complete: function() {
-        // complete
-        console.log("定位完成");
-      }
-    })
-  },
+  // getCityNameOFLocation: function() {
+  //   var that = this;
+  //   wx.getLocation({
+  //     type: 'gcj02', // 默认为 wgs84 返回 gps 坐标，gcj02 返回可用于 wx.openLocation 的坐标
+  //     success: function(res) {
+  //       console.log("定位成功");
+  //       var locationString = res.latitude + "," + res.longitude;
+  //       wx.request({
+  //         url: 'https://apis.map.qq.com/ws/geocoder/v1/?&get_poi=1',
+  //         data: {
+  //           "key": "AHDBZ-ZKDW6-AZISE-ELXTA-OL4CT-DZBVL",
+  //           "location": locationString
+  //         },
+  //         method: 'GET',
+  //         // header: {}, 
+  //         success: function(res) {
+  //           // success
+  //           console.log("请求成功");
+  //           console.log("请求数据:" + res.data.result.address);
+  //           var address = res.data.result.address;
+  //           that.setData({
+  //             address: address
+  //           })
+  //         },
+  //         fail: function() {
+  //           // fail
+  //           console.log("请求失败");
+  //         },
+  //         complete: function() {
+  //           // complete
+  //           console.log("请求完成");
+  //         }
+  //       })
+  //     },
+  //     fail: function() {
+  //       // fail
+  //       console.log("定位失败");
+  //     },
+  //     complete: function() {
+  //       // complete
+  //       console.log("定位完成");
+  //     }
+  //   })
+  // },
   //  微信获取地址d
   // getLocation: function (e) {
   //   wx.getLocation({

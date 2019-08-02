@@ -1,0 +1,33 @@
+<!--pages/home/myBad/myBad.wxml-->
+<view class='container f1 h6' id='myBad'>
+<!-- 未处理 -->
+  <view class='list bo white' wx:for="{{dataArr}}" data-index="{{index}}">
+    <view class='top' style='background:{{color}};'>
+      <view class='title fl f4'>{{item.pname}}</view>
+      <view class='time fr'></view>
+      <view class='cleaned'></view>
+    </view>
+    <view class='detail'>
+      <view class='name fl'>代码名称：{{item.name}}</view>
+      <view class='grade fl'>故障等级：{{item.rank}}</view>
+      <view class='cleaned'></view>
+      <view class='code'>故障代码：{{item.code}}</view>
+      <view class='suggest'>处理建议：{{item.manage}}</view>
+    </view>
+  </view>
+  <!-- 已处理 -->
+   <view class='list bo white' wx:for="{{dataArr1}}" data-index="{{index}}">
+    <view class='top' style='background:{{color}};'>
+      <view class='title fl f4'>{{item.pname}}</view>
+      <view class='time fr'></view>
+      <view class='cleaned'></view>
+    </view>
+    <view class='detail'>
+      <view class='name fl'>代码名称：{{item.name}}</view>
+      <view class='grade fl'>故障等级：{{item.rank}}</view>
+      <view class='cleaned'></view>
+      <view class='code'>故障代码：{{item.code}}</view>
+      <view class='suggest'>处理建议：{{item.manage}}</view>
+    </view>
+  </view>
+</view>

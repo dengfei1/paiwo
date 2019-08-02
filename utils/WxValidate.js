@@ -47,6 +47,7 @@ class WxValidate {
                 number: '请输入有效的数字。',
                 digits: '只能输入数字。',
                 idcard: '请输入18位的有效身份证。',
+                address: "请输入联系地址",
                 equalTo: this.formatTpl('输入值必须和 {0} 相同。'),
                 contains: this.formatTpl('输入值必须包含 {0}。'),
                 minlength: this.formatTpl('最少要输入 {0} 个字符。'),
@@ -133,6 +134,12 @@ class WxValidate {
             equalTo(value, param) {
                 return that.optional(value) || value === that.data[param]
             },
+            /**
+             * 验证输入联系地址
+             */
+           address(value) {
+             return that.optional(value)
+           },
             /**
              * 验证是否包含某个值
              */

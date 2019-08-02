@@ -12,7 +12,8 @@ Page({
     avatarUrl: '',
     name:'',
     address:'',
-
+    gender:'',
+    realName:''
   },
 
   /**
@@ -20,6 +21,13 @@ Page({
    */
   onLoad: function (options) {
     var that = this;
+    var userList = wx.getStorageSync('userList')
+    var realName = userList.user.data.currentUser.realName
+
+    that.setData({
+      realName: realName
+    })
+   
     lang: "zh_CN",
     // 获取用户信息
     wx.getUserInfo({
@@ -28,13 +36,17 @@ Page({
         var nickName = res.userInfo.nickName
         var avatarUrl = res.userInfo.avatarUrl
         var gender = res.userInfo.gender //性别 0：未知、1：男、2：女
-        if (gender = 1) {
+        console.log('gender',gender)
+
+        console.log('gender1', that.data.gender)
+        if (gender == 1) {
           that.setData({ gender: '男' })
         }
-        if (gender = 2) {
+        if (gender == 2) {
           that.setData({ gender: '女' })
+        
         }
-        if (gender = 0) {
+        if (gender == 0) {
           that.setData({ gender: '未知' })
         }
         console.log("2222",gender);
@@ -44,31 +56,31 @@ Page({
         console.log(res)
         that.setData({
           userInfo: userInfo,
-          nickName: nickName,
+           nickName: nickName,
           avatarUrl: avatarUrl
         })
       }
     })
-    // wx.login({
-    //   success: function (res_login) {
-    //     if (res_login.code) {
-    //       wx.getUserInfo({
-    //         withCredentials: true,
-    //         success: function (res_user) {
-    //           var requestUrl = "/getUserApi/xxx.php";
-    //           var jsonData = {
-    //             code: res_login.code,
-    //             encryptedData: res_user.encryptedData,
-    //             iv: res_user.iv
-    //           };
-    //           request.httpsPostRequest(requestUrl, jsonData, function (res) {
-    //             console.log(res.openId);
-    //           });
-    //         }
-    //       })
-    //     }
-    //   }
-    // })
+    wx.login({
+      success: function (res_login) {
+        if (res_login.code) {
+          wx.getUserInfo({
+            withCredentials: true,
+            success: function (res_user) {
+              var requestUrl = "/getUserApi/xxx.php";
+              var jsonData = {
+                code: res_login.code,
+                encryptedData: res_user.encryptedData,
+                iv: res_user.iv
+              };
+              request.httpsPostRequest(requestUrl, jsonData, function (res) {
+                console.log(res.openId);
+              });
+            }
+          })
+        }
+      }
+    })
     
   },
   // 修改地址信息

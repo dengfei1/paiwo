@@ -1,5 +1,5 @@
 /* pages/home/myMsg/myMsg.wxss */
-
+@import "../../../wxParse/wxParse.wxss";
 /* 切换按钮 */
 
 .tab {
@@ -29,11 +29,6 @@
 
 .swiper {
   width: 100%;
-  height: 100%;
-  display: flex;
-  position: fixed;
-  bottom: -400rpx;
-  top: 10rpx
 }
 
 .table {
@@ -41,15 +36,10 @@
   z-index: 99;
 }
 
-.swiperList {
-  margin-top: 100rpx;
-}
+
 
 /* 切换1 */
-scroll-view{
-  width: 100%;
-  height: 93%;/*动态高度*/
-}
+
 .tab1 {
   float: left;
   text-align: center;
@@ -102,6 +92,9 @@ scroll-view{
 
 .main {
   border-bottom: 1px solid #cdcdcd;
+  height: 80rpx;
+  width: 100%;
+  overflow: hidden;
 }
 
 /* 我的评价 */
@@ -234,17 +227,29 @@ scroll-view{
   left: 0;
   padding: 0 20rpx;
 }
-.title{text-align: center}
+.title{text-align: center;}
+
+.subtitle{
+  line-height: 60rpx;
+}
+
+.userName{
+  margin-left: 20rpx;
+}
+
 
 .boxed {
   margin: 20rpx;
   width: 630rpx;
   padding: 20rpx;
+  min-height: 1000rpx;
 }
 
 .icon-shanchu {
-  top: -9rpx;
-  right: -1rpx;
+  top: 0rpx;
+  right: 4rpx;
+  z-index: 100;
+  position: absolute;
 }
 
 .imaged{width: 96%;height: 300rpx;margin: 10rpx auto;background: pink}

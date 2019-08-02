@@ -1,15 +1,35 @@
 //app.js
+var config = require("./utils/config.js");
+
 App({
   onLaunch: function() {
+    var that = this;
+    
+    // wx.request({
+    //   url: app.globalData.requestUrl,
+    //   data: {
+    //     code: res.code
+    //   },
+    //   success: function (res) {
+    //     let ret = res.data;
+    //     if (ret.status == 200) {
+    //       // 添加到全局数据的header中
+    //       app.globalData.header.Cookie = 'JSESSIONID=' + ret.data.sessionid;
+    //     }
+    //   }
+    // })
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
+    //添加最新的数据到缓存
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
-
     // 登录
     wx.login({
       success: res => {
         // 发送 res.code 到后台换取 openId, sessionKey, unionId
+        // var list = wx.getStorageSync('userList');
+        
+
       }
     })
     // 获取用户信息
@@ -30,10 +50,15 @@ App({
           })
         }
       }
-    })
+    });
+  
   },
   globalData: {
     userInfo: null,
-    // urlPath:''
-  }
+    header: {
+      'Cookie': ''
+    },
+   // url: 'http://localhost:80',
+    url: config.domain,
+  },
 })

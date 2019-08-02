@@ -1,4 +1,8 @@
 {
-  "usingComponents": {},
-  "navigationBarTitleText": "运行"
+  "navigationBarTitleText": "运行",
+  "usingComponents": {
+    "ec-canvas": "../../ec-canvas/ec-canvas"
+  },
+  "enablePullDownRefresh": false
+  
 }

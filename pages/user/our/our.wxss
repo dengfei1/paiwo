@@ -10,9 +10,12 @@ page {
 }
 
 .logo {
-  margin: 200rpx 0 50rpx 0;
+  margin: 200rpx auto 20rpx auto;
+  width: 600rpx;
 }
-
+image{
+  width: 600rpx;
+}
 .name {
   font-size: 40rpx;
   font-weight: bold;
@@ -23,7 +26,7 @@ page {
 }
 
 .comp {
-  bottom: -585rpx;
+  bottom: -430rpx;
   left: 0;
   right: 0;
 }

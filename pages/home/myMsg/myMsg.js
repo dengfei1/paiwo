@@ -1,4 +1,10 @@
 // pages/home/myMsg/myMsg.js
+var app = new getApp();
+var http = require('../../../utils/http.js')
+var WxParse = require('../../../wxParse/html2json.js')
+var WxParse1 = require('../../../wxParse/wxParse.js')
+
+var dialog = require('../../../utils/dialog.js')
 Page({
 
   /**
@@ -14,113 +20,181 @@ Page({
     noAss: '',
     assed: '',
     // 信息公告
-    dataArr: [{
-      title: '公告标题',
-      main: '公告内容大概',
-      more: '查看详情',
-      time: '14:30',
-      mored: 'more'
-    },
-    {
-      title: '公告标题',
-      main: '公告内容大概',
-      more: '查看详情',
-      time: '14:30',
-      mored: 'more'
-    },
-    {
-      title: '公告标题',
-      main: '公告内容大概',
-      more: '查看详情',
-      time: '14:30',
-      mored: 'more'
-      }, {
-        title: '公告标题',
-        main: '公告内容大概',
-        more: '查看详情',
-        time: '14:30',
-        mored: 'more'
-      },
-      {
-        title: '公告标题',
-        main: '公告内容大概',
-        more: '查看详情',
-        time: '14:30',
-        mored: 'more'
-      },
-      {
-        title: '公告标题',
-        main: '公告内容大概',
-        more: '查看详情',
-        time: '14:30',
-        mored: 'more'
-      }
+    dataArr: [
+      // { 
+      //   time:'12:44',
+      //   title:'标签公告',
+      //   main:'大幅度发',
+      //   more: '查看详情',
+      //   mored:'more'
+      // }, 
+      // {
+      //   time: '12:44',
+      //   title: '标签公告',
+      //   main: '大幅度发',
+      //   more: '查看详情',
+      //   mored: 'more'
+      // }
+     
     ],
+    page: 1,
+    pages: 0,
     dataList: [{}],
     moreDetail: [{
       title: '公告标题',
       main: '  公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概',
       imgUrl: ''
     }],
-    // 待评价
-    toBe: [{
-      title: '公告标题',
-      main: '公告内容大概',
-      more: '查看详情',
-      timed: '2019-04-18 10:00',
-      time: '2019-04-18 14:00',
-      result: '已解决1',
-      id: '1'
-    },
-    {
-      title: '公告标题',
-      main: '公告内容大概',
-      more: '查看详情',
-      timed: '2019-04-18 10:00',
-      time: '2019-04-18 14:00',
-      result: '已解决2',
-      id: '2'
-    },
-    {
-      title: '公告标题',
-      main: '公告内容大概',
-      more: '查看详情',
-      timed: '2019-04-18 10:00',
-      time: '2019-04-18 14:00',
-      result: '已解决3',
-      id: '3'
 
-    }
-    ],
-    // 已评价
-    hadAss: [{
-      remark: '礼貌热情，认真负责',
-      name: '项目名称项目名称项目名称项目名称1',
-      time: '4月10日',
-      imgUrl: ''
-    },
-    {
-      remark: '礼貌热情，认真负责',
-      name: '项目名称项目名称项目名称项目名称2',
-      time: '4月10日',
-      imgUrl: ''
-    },
-    {
-      remark: '礼貌热情，认真负责',
-      name: '项目名称项目名称项目名称项目名称3',
-      time: '4月10日',
-      imgUrl: ''
-    }
-    ]
+   
+    swiperHeight: "",
+    pageSize:'',
+    notice:'',
+    pageNum:'',
+    // toView: 'red',
+    scrollTop: 100,
+    
+    //存时间
+    results:[{
+      timeItem:""
+    }]
+    
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    dialog.loading();
+    var that = this;
+  
+    var params = {
+      url: '/notice/findAllNews',
+      method: "GET",
+      callBack: (res) => {
+        dialog.hide();
+        console.log('获取公告数据', res)
+        //通过request获取数据后；这里不写了。
+        var result = res.data;
+
+        var list =[] ;//我这里的contnet是html内容
+        var times=[];//取出时间
+        for(let i=0;i<result.length;i++) {
+          list.push(result[i].content)
+          times.push(result[i].stopTime)
+        }
+        console.log("times",times)
+        var htmlAry = [];
+        for (let i = 0; i < list.length; i++) {
+            htmlAry[i] = WxParse.html2json(list[i], 'returnData');//重点，就是这里。只要这么干就能直接获取到转化后的node格式数据；
+            console.log(htmlAry[i]);
+          
+        }
+        for(let i=0;i<times.length;i++){
+          // var stringTime = "2017-11-24 10:18:00";
+          var stringTime = times[i]
+          stringTime = new Date(Date.parse(stringTime.replace(/-/g, "/")));
+          var date = stringTime.getTime();
+          console.log("dd", date )
+          this.timeago(date,i)
+         
+      
+          for (let i = 0; i < this.data.results.length;i++){
+            var timeItem = this.data.results[i].timeItem
+            result[i].timeItem = timeItem
+            }
+            that.setData({
+              dataArr: result,
+              htmlAry: htmlAry,//记得这里要加入
+            });
+          
+        }
+     
 
 
+      }
+
+    }
+    http.request(params)
+
+    
   },
+  /**
+   * 把后台传来的日期时间转化为几天前,几小时前，几分钟前在前端展现
+   */
+
+  timeago(dateTimeStamp,i){
+    console.log("调用timeago", dateTimeStamp)
+    var result=""
+    // dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
+    var minute = 1000 * 60;      //把分，时，天，周，半个月，一个月用毫秒表示
+    var  hour = minute * 60;
+    var day = hour * 24;
+    var week = day * 7;
+    var halfamonth = day * 15;
+    var month = day * 30;
+    
+    var  now = new Date().getTime();   //获取当前时间毫秒
+    console.log("now", now)
+    var diffValue = now - dateTimeStamp;//时间差
+    console.log("diffValue", diffValue)
+    if(diffValue<0) { return; }
+      //计算时间差的分，时，天，周，月
+	  var  minC = diffValue / minute;   
+    var  hourC = diffValue / hour;
+    var  dayC = diffValue / day;
+    var  weekC = diffValue / week;
+    var  monthC = diffValue / month;
+  
+    if(monthC>= 1){
+       result = "" + parseInt(monthC) + "月前";
+     }else if (weekC >= 1) {
+       result = "" + parseInt(weekC) + "周前";
+     }else if (dayC >= 1) {
+      result = "" + parseInt(dayC) + "天前";
+     }else if (hourC >= 1) {
+      result = "" + parseInt(hourC) + "小时前";
+     }else if (minC >= 1) {
+        result = "" + parseInt(minC) + "分钟前";
+      }else{
+        result = "刚刚";
+      } 
+    console.log("调用timeago", dateTimeStamp)
+      console.log("result",result)
+      var  results=this.data.results
+      results[i].timeItem = result
+      this.setData({
+        results: results
+      })
+    console.log(this.data.result)
+      // return result;
+	},
+
+  upper: function (e) {
+    console.log(e)
+  },
+  lower: function (e) {
+    console.log(e)
+  },
+  scroll: function (e) {
+    console.log(e)
+  },
+  tap: function (e) {
+    for (var i = 0; i < order.length; ++i) {
+      if (order[i] === this.data.toView) {
+        this.setData({
+          toView: order[i + 1]
+        })
+        break
+      }
+    }
+  },
+  tapMove: function (e) {
+    this.setData({
+      scrollTop: this.data.scrollTop + 10
+    })
+  },
+
   // 删除评价
   delate: function (e) {
     var that = this;
@@ -131,13 +205,21 @@ Page({
     that.setData({
       hadAss: hadAss
     })
-
   },
   // 查看详情
-  more: function () {
+  more: function (e) {
     var that = this;
+    var index =e.currentTarget.dataset.index;
+  
+    var moreDetail=[]
+    moreDetail.push(this.data.dataArr[index])
+    console.log(this.data.dataArr[index])
+    console.log(moreDetail[0].content)
+    WxParse1.wxParse('content', 'html', moreDetail[0].content, that, 5); 
+    
     that.setData({
-      isHide: true
+      isHide: true,
+      moreDetail: moreDetail
     })
   },
   //获取当前滑块的index

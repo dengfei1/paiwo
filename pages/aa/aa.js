@@ -1,10 +1,12 @@
 //index.js
+// midea_zd_wr
 var zhenzisms = require('../../utils/zhenzisms.js');
+var http = require('../../utils/http.js')
 
 //获取应用实例
-const app = getApp();
+var app = new getApp();
 var that;
-
+var setTimer;
 Page({
   data: {
     hidden: true,
@@ -19,37 +21,65 @@ Page({
     isHiddend: true,
     isHide: false,
     ajxtrue: false,
+    wxCode: '',
+    open_key: '',
+    openId: '',
+    sessionKey: '',
+    encryptedData: '',
+    iv: '',
+    codeStyle:'',
 
+    isSecondHide:false
   },
-  onLoad: function() {
+  onLoad: function(res) {
+
     //判断是否登录
+    var that = this;
     wx.login({
       success(res) {
+        that.setData({
+          code: res.code
+        })
+        wx.getUserInfo({
+          success: function(res) {
+            //获取用户敏感数据密文和偏移向量
+            that.setData({
+              encryptedData: res.encryptedData
+            })
+            that.setData({
+              iv: res.iv
+            })
+            console.log('iv:', res.iv, 'encryptedData:', res.encryptedData)
+          }
+        })
+
+        console.log(res)
         if (res.code) {
-          // 发起网络请求
+          // 发起网络请求   
           wx.request({
-            url: 'http://localhost:80/login/WXlogin',
+            url: app.globalData.url + '/login/WXlogin',
             data: {
-              code: res.code
-            }
+               wxCode: res.code
+            },
           })
         } else {
           console.log('登录失败！' + res.errMsg)
         }
       }
     })
+
+
   },
-  // 确认密码
+  // 验证输入密码
   bindPasswordInput: function(e) {
     let that = this;
     let val = e.detail.value;
-    // console.log("333", val)
-    // console.log("222", val.length)
+    console.log(val)
     that.setData({
       password: val
     })
-
   },
+ //验证输入确定密码
   bindPasswordInput1: function(e) {
     let that = this;
     let password = that.data.password;
@@ -57,6 +87,7 @@ Page({
     that.setData({
       password1: val,
     })
+    console.log('val', val)
     // console.log("111",val.length)
     if ((val.length >= password.length) && (val != password)) {
       wx.showToast({
@@ -76,15 +107,16 @@ Page({
     if ((phone != '') && (possword != '') && (possword1 != '') && (code != '')) {
       let val = e.detail.value
       let ajxtrue = this.data.ajxtrue
-      if (ajxtrue == true) {
-        //表单提交进行
-      } else {
-        wx.showToast({
-          title: '手机号有误',
-          icon: 'success',
-          duration: 2000
-        })
-      }
+      console.log('ajxtrue', ajxtrue)
+      // if (ajxtrue == true) {
+      //   //表单提交进行
+      // } else {
+      //   wx.showToast({
+      //     title: '手机号有误',
+      //     icon: 'success',
+      //     duration: 2000
+      //   })
+      // }
     } else {
       wx.showToast({
         title: '信息还未填写完',
@@ -94,6 +126,7 @@ Page({
     }
 
   },
+
   //姓名输入
   bindNameInput(e) {
     this.setData({
@@ -104,12 +137,13 @@ Page({
   bindPhoneInput: function(e) {
     // console.log(e.detail.value);
     var val = e.detail.value;
-    that = this
+    var that = this
     if (!(/^1[34578]\d{9}$/.test(val))) {
       this.setData({
-        ajxtrue: false
+        ajxtrue: false,
+        codeStyle: ''
       })
-      if (val.length >= 11) { 
+      if (val.length >= 11) {
         wx.showToast({
           title: '手机号有误',
           icon: 'success',
@@ -117,32 +151,39 @@ Page({
         })
       }
     } else {
-      this.setData({
-        ajxtrue: true
+      that.setData({
+        ajxtrue: true,
+        codeStyle:'codeStyle'
       })
       console.log('验证成功', that.data.ajxtrue)
+
+      //改变验证码颜色
+
     }
     // var val = e.detail.value;
-    this.setData({
-      phone: val
-    })
-    if (val != '') {
-      this.setData({
-        hidden: false,
-        btnValue: '获取验证码'
+
+      that.setData({
+        phone: val
       })
-    } else {
-      this.setData({
-        hidden: true
-      })
+      console.log('验证码手机号输入', val)
+      if (val != '') {
+        that.setData({
+          hidden: false,
+          btnValue: '获取验证码'
+        })
+      } else {
+        that.setData({
+          hidden: true
+        })    
     }
+    
   },
   //密码手机号输入
   bindPhoneInput1: function(e) {
     // console.log(e.detail.value);
     var val = e.detail.value;
     that = this
-    if (!(/^1[34578]\d{9}$/.test(val))) {
+    if (!(/^1[345789]\d{9}$/.test(val))) {
       this.setData({
         ajxtrue: false
       })
@@ -159,7 +200,7 @@ Page({
       })
       console.log('验证成功', that.data.ajxtrue)
     }
-    // var val = e.detail.value;
+
     this.setData({
       phone: val
     })
@@ -173,59 +214,111 @@ Page({
     })
   },
   toPassword: function() {
+    clearInterval(setTimer);
     that = this;
     that.setData({
-      isHiddend: true
+      isHiddend: true,
+      codeStyle: '',
+      isSecondHide: false,
+      second: 60,
+      btnValue: '获取验证码',
+      phone:''
     })
   },
   // 注册
   register: function() {
+    clearInterval(setTimer);
     that = this;
     that.setData({
-      isHide: true
+      isHide: true,
+      codeStyle: '',
+      isSecondHide: false,
+      second: 60,
+      btnValue: '获取验证码',
+      phone:''
     })
-   
   },
+
   //注册提交
-  regis:function(){
+  regis: function(e) {
     var that = this;
-    var isrightful = that.bindPhoneInput();
-    wx.request({
-      url: 'http://localhost:80/user/saveOrUpdate',
-      header: {
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      method: "POST",
-      data: {
-        phone: phone,
-        password: password
-      },
-      success: function (res) {
-        console.log(res)
-        // if (res.statusCode != 200) {
-        //   wx.showToast({ //这里提示失败原因
-        //     title: res.data.message,
-        //     icon: 'loading',
-        //     duration: 1500
-        //   })
-        // } else {
-        //   wx.showToast({
-        //     title: '注册成功', //这里成功
-        //     icon: 'success',
-        //     duration: 1000
-        //   });
-        
-        // }
-      },
-      fail: function (res) {
-        console.log(res)
-        wx.showToast({
-          title: '请求失败',
-          icon: 'none',
-          duration: 1500
-        })
+    //var isrightful = that.bindPhoneInput();
+    wx.login({
+      success: function(res) {
+        console.log(res.code, 'res.code')
+        var userList = wx.getStorageSync('key')
+        console.log('userList',userList)
+        app.globalData.header.Cookie = 'JSESSIONID=' + userList.sessionId;
+        console.log('app.globalData.header.Cookie', app.globalData.header.Cookie)
+        // var data = JSON.stringify({
+        //   phone: that.data.phone,
+        //   password: that.data.password,
+        //   code: that.data.code,
+        //   wxCode: res.code,
+        //   user: {
+        //     password: that.data.password,
+        //     code: that.data.code,
+        //   }
+        // });
+        console.log()
+        if (res.code) {
+          console.log(that.data.password,'that.data.password')
+          console.log(that.data.code, 'that.data.code')
+          // var aa =  {
+          //   phone: that.data.phone,
+          //   password: that.data.password,
+          //   code: that.data.code
+          // }
+
+          wx.request({
+            //url: app.globalData.url + '/user/savewx',
+            url: app.globalData.url + '/user/savewx?phone=' + that.data.phone + '&&password=' + that.data.password + '&&code=' + that.data.code,
+            method: "POST",
+             data: {
+                // phone: that.data.phone,
+                //  password: that.data.password,
+                //  code: that.data.code
+              //  jsonObject: {
+              //    phone: that.data.phone,
+              //    password: that.data.password,
+              //    code: that.data.code
+              //   }
+             
+              // user:{
+              //   // password: that.data.password,
+              //   // code: that.data.code,
+              //   phone: that.data.phone,
+              //   password: that.data.password,
+              //   // userName:'zhangyue',
+              // }
+            }, //请求参数
+            header: {},
+            complete() { //请求结束后隐藏 loading 提示框
+            },
+            success: res => {
+              console.log('注册成功',res)
+              // console.log(res.sessionId, 'session_key')
+              // wx.setStorageSync('wxCode', res.session_key)
+              wx.showToast({
+                title: res.data.info,
+                icon: 'none',
+                duration: 2000
+              })
+
+              if (res.data.info=="注册成功"){
+                that.setData({
+                  isHiddend: true,
+                  isHide: false
+                })
+              }
+             
+              
+            }
+          });
+        }
       }
-    });
+    })
+
   },
   back: function() {
     that = this;
@@ -238,118 +331,235 @@ Page({
     this.setData({
       code: e.detail.value
     })
+    console.log(e.detail.value)
   },
-
   //获取短信验证码
   getCode: function(res) {
     console.log('获取验证码', 111);
-    that = this;
+    var that = this;
     var phone = that.data.phone;
-    if (!(/^1[34578]\d{9}$/.test(phone))) {
+    if (!(/^1[345789]\d{9}$/.test(phone))) {
       wx.showToast({
         title: '手机号有误',
         icon: 'success',
         duration: 2000
       })
     } else {
-      // zhenzisms.client.init('https://sms_developer.zhenzikj.com', '	wx5a4984fe9acfa421', '0c9d276841c5255c13073455a9edc568');
-      // zhenzisms.client.send(function(res) {
-      //   if (res.data.code == 0) {
-      //     that.timer();
-      //     return;
-      //   }
-      //   wx.showToast({
-      //     title: res.data.data,
-      //     icon: 'none',
-      //     duration: 2000
-      //   })
-      // }, '15811111111', '验证码为:3322');
-      wx.request({
-        url: 'http://localhost:80/user/forgetPassword', //请求接口的url
-        method: 'GET', //请求方式
-        data: {
-          phone:this.data.phone
-        },//请求参数
-        header: {
-          'content-type': 'application/json' // 默认值
-        },
-        complete() {  //请求结束后隐藏 loading 提示框
-          wx.hideLoading();
-        },
-        success: res => {
-          console.log(res,'yanzhengma')
-          wx.showToast({
-            title: res.data.info,
-            icon: 'none',
-            duration: 2000
-          })
-          // this.setData({
-          //   data: res.data,
+       
+      if (!that.data.isSecondHide){
+        //获取验证码出现59秒倒计时
+        that.setData({
+          btnValue: '秒后重试',
+          codeStyle: '',
+          isSecondHide: true,
+        })
+        console.log("phone:" + that.data.phone + "wxCode:" + that.data.code)
+        wx.request({
+          url: app.globalData.url + '/user/sendSMSCode',
+          method: 'GET', //请求方式
+          data: {
+            phone: that.data.phone,
+            wxCode:that.data.code
+          }, //请求参数
+          header: {
+            'content-type': 'application/json' // 默认值
+          },
+          success: res => {
+            console.log('验证码', res)
+            //console.log(res, 'yanzhengma')
+            // wx.setStorageSync("key", res.data.data);
+            // console.log('res.data.data.sessionId', res.data.data)
+            // wx.showToast({
+            //   title: res.data.info,
+            //   icon: 'none',
+            //   duration: 2000
+            // })
+            // this.setData({
+            //   data: res.data,
 
-          // })
-        }
-      });
+            // })
+
+             setTimer = setInterval(
+              function() {
+                that.setData({
+                  second: that.data.second - 1
+                })
+                console.log(that.data.second)
+                if (that.data.second <= 0) {
+                  console.log("秒", that.data.second)
+                  that.setData({
+                    btnValue: '获取验证码',
+                    codeStyle: 'codeStyle',
+                    isSecondHide: false,
+                    second: 60
+                  })
+                  clearInterval(setTimer);
+                }
+              }, 1000)
+
+          }
+        });
+      }
      
+
     }
   },
-  timer: function() {
-    let promise = new Promise((resolve, reject) => {
-      let setTimer = setInterval(
-        () => {
-          var second = this.data.second - 1;
-          this.setData({
-            second: second,
-            btnValue: second + '秒',
-            btnDisabled: true
-          })
-          if (this.data.second <= 0) {
-            this.setData({
-              second: 60,
-              btnValue: '获取验证码',
-              btnDisabled: false
-            })
-            resolve(setTimer)
-          }
-        }, 1000)
+  // 验证码登录
+  codeLoad:function(e){
+    console.log('验证码登录',1111);
+    var that = this;
+    //console.log('密码: ' + this.data.password);
+    //console.log('手机号: ' + this.data.phone);
+    // console.log('验证码: ' + this.data.code);
+    // console.log('验证码: ' + this.data.userName);
+    console.log('wxCode: ' + that.data.code);
+    wx.login({
+       success:function(res){
+         if(res.code){
+           wx.request({
+             url: app.globalData.url + '/login/WXlogin',
+
+             data: {
+               phone: that.data.phone,
+               // password: this.data.password,
+               code: that.data.code ,
+               wxCode:res.code
+             },
+             header: {
+               'content-type': 'application/json' // 默认值
+             },
+             success(res) {
+               console.log("res:", res);
+               console.log("resId:", res.data);
+               console.log("app:", app.globalData.header);
+               wx.showToast({
+                 title: res.data.info,
+                 icon: 'none',
+                 duration: 2000
+               })
+               wx.setStorage({
+                 key: "apply",
+                 data: {
+                   'openId': res.data.data.openid,
+                   'sessionKey': res.data.data.session_key,
+                 }
+               })
+               // 存储用户信息
+               wx.setStorage({
+                 key: "userList",
+                 data: {
+                   'user': res.data,
+                   'phone': res.data.phone
+                 }
+               })
+               if (res.data.info === '登录成功！') {
+                 wx.switchTab({
+                   url: '/pages/home/home'
+                 })
+               }
+             }
+           })
+         }
+       
+       }
     })
-    promise.then((setTimer) => {
-      clearInterval(setTimer)
-    })
+    // wx.request({
+    //   url: app.globalData.url + '/login/WXlogin',
+
+    //   data: {
+    //     phone: this.data.phone,
+    //     // password: this.data.password,
+    //     code: this.data.code,
+    //     wxCode: this.data.code
+    //   },
+    //   header: {
+    //     'content-type': 'application/json' // 默认值
+    //   },
+    //   success(res) {
+    //     console.log("res:", res);
+    //     console.log("resId:", res.data);
+    //     console.log("app:", app.globalData.header);
+    //     wx.showToast({
+    //       title: res.data.info,
+    //       icon: 'none',
+    //       duration: 2000
+    //     })
+    //     wx.setStorage({
+    //       key: "apply",
+    //       data: {
+    //         'openId': res.data.data.openid,
+    //         'sessionKey': res.data.data.session_key,
+    //       }
+    //     })
+    //     // 存储用户信息
+    //     wx.setStorage({
+    //       key: "userList",
+    //       data: {
+    //         'user': res.data,
+    //         'phone': res.data.phone
+    //       }
+    //     })
+    //     if (res.data.info === '登录成功！') {
+    //       wx.switchTab({
+    //         url: '/pages/home/home'
+    //       })
+    //     }
+    //   }
+    // })
+
   },
-  //保存
-  save(e) {
+  //保存 登录 密码登录
+  passwordLoad:function(e) {
+    console.log('密码登录',222)
+    var that = this;
     console.log('密码: ' + this.data.password);
     console.log('手机号: ' + this.data.phone);
-    console.log('验证码: ' + this.data.code); 
-    console.log('验证码: ' + this.data.userName);
-    // var  userName = this.data.userName;
-    // var password = this.data.password
-    //  + 'userName=' + userName + '&password=' + password, 
-
+    // console.log('验证码: ' + this.data.code);
+    // console.log('验证码: ' + this.data.userName);
+    console.log('wxCode: ' + this.data.code);
     wx.request({
-      url: 'http://localhost:80/login/WXlogin',
+      url: app.globalData.url + '/login/WXlogin',
       data: {
         userName: this.data.userName,
         password: this.data.password,
-        code: this.data.code
+        wxCode: this.data.code
       },
       header: {
         'content-type': 'application/json' // 默认值
       },
       success(res) {
-        console.log(res.data);
+        console.log("res:", res);
+        console.log("resId:", res.data);
+        // if (res.status == 200) {
+        // 添加到全局数据的header中
+        // app.globalData.header.Cookie = 'JSESSIONID=' + res.data.data.sessionId;
+        // }
+        console.log("app:", app.globalData.header);
         wx.showToast({
           title: res.data.info,
           icon: 'none',
           duration: 2000
         })
-        if (res.data.info === '登录成功！'){
+        wx.setStorage({
+          key: "apply",
+          data: {
+            'openId': res.data.data.openid,
+            'sessionKey': res.data.data.session_key,
+          }
+        })
+        // 存储用户信息
+        wx.setStorage({
+          key: "userList",
+          data: {
+            'user': res.data
+          }
+        })
+        if (res.data.info === '登录成功！') {
           wx.switchTab({
-             url: '/pages/home/home'
+            url: '/pages/home/home'
           })
         }
       }
-    }) 
-   
+    })
   }
 })

@@ -1,6 +1,8 @@
 // pages/home/mySet/mySet.js
 // var wxValidate = require('../../../utils/WxValidate.js');
 import WxValidate from '../../../utils/WxValidate';
+var http = require("../../../utils/http.js")
+var dialog = require("../../../utils/dialog.js");
 var initdata = function(that) {
   var list = that.data.list
   for (var i = 0; i < list.length; i++) {
@@ -11,6 +13,7 @@ var initdata = function(that) {
   })
 }
 var app = new getApp();
+// var id = '';
 Page({
   /**
    * 页面的初始数据
@@ -18,47 +21,82 @@ Page({
   data: {
     delBtnWidth: 185, //删除按钮宽度单位（rpx） 
     isHide: false,
-    list: [{
-        shows: "",
-        name: '安子岭中心小学123',
-        num: '1234567897888',
-        type: '冷暖机型',
-        model: 'hsg-sjhga',
-        time: '2019-04-19',
-        address: '广东广州海珠区广一电商园k案件是否考虑F暗示法律',
-        imgUrl: ''
-      },
-      {
-        shows: "",
-        name: '安子岭中心小学223',
-        num: '1234567897888',
-        type: '冷暖机型',
-        model: 'hsg-sjhga',
-        time: '2019-04-19',
-        address: '广东广州海珠区',
-        imgUrl: ''
-      },
-      {
-        shows: "",
-        name: '安子岭中心小学323',
-        num: '1234567897888',
-        type: '冷暖机型',
-        model: 'hsg-sjhga',
-        time: '2019-04-19',
-        address: '广东广州海珠区',
-        imgUrl: ''
-      },
+    list: [
+     
     ],
     show: "",
+    id: '',
+    testNum: '',
+    scrollTop: 100
   },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
+
+    var use = wx.getStorageSync('apply')
     var that = this;
+      //验证函数
     that.initValidate();
     that.initEleWidth();
-    console.log(that.list);
+    console.log("e:", app.globalData.header);
+    //获取用户信息
+    var userList = wx.getStorageSync('userList')
+    
+    dialog.loading();
+
+    var id = userList.user.data.currentUser.id
+    console.log(id, "id");
+    console.log('userList', userList.user.data.sessionId)
+    app.globalData.header.Cookie = 'JSESSIONID=' + userList.user.data.sessionId;
+    wx.request({
+      url: app.globalData.url + '/appLet/findLetEquipment?userId=' + id,
+      header: app.globalData.header,
+      method: "POST",
+      success: function(res) {
+        dialog.hide();
+        
+        console.log(res, 'res')
+        var dataList = res.data.data;
+        that.setData({
+          list: dataList
+        })
+      },
+      fail: function(res) {
+        console.log(res, 'res1')
+        wx.showToast({
+          title: '请求失败',
+          icon: 'none',
+          duration: 1500
+        })
+      }
+    });
+
+  },
+  // 刷新加载
+  upper: function (e) {
+    console.log(e)
+  },
+  lower: function (e) {
+    console.log(e)
+  },
+  scroll: function (e) {
+    console.log(e)
+  },
+  tap: function (e) {
+    for (var i = 0; i < order.length; ++i) {
+      if (order[i] === this.data.toView) {
+        this.setData({
+          toView: order[i + 1]
+        })
+        break
+      }
+    }
+  },
+  tapMove: function (e) {
+    this.setData({
+      scrollTop: this.data.scrollTop + 10
+    })
   },
   // 开始滑动事件
   touchS: function(e) {
@@ -118,6 +156,7 @@ Page({
   getEleWidth: function(w) {
     var real = 0;
     try {
+      // wx.getSystemInfoSync()根据手机品牌获取宽度
       var res = wx.getSystemInfoSync().windowWidth;
       var scale = (750 / 2) / (w / 2);
       // console.log(scale); 
@@ -134,18 +173,79 @@ Page({
       delBtnWidth: delBtnWidth
     });
   },
-  //点击删除按钮事件 
+  //点击删除按钮事件 （设备解绑）
   delItem: function(e) {
+    var that = this;
+    // wx.showModal({
+    //   title: '提示',
+    //   content: '你将解除该项目？',
+    //   showCancel: true,//是否显示取消按钮
+    //   cancelText: "否",//默认是“取消”
+    //  // cancelColor: 'skyblue',//取消文字的颜色
+    //   confirmText: "是",//默认是“确定”
+    //   success: function(res) {
+    //     if (res.confirm) {
+    //       var list = that.data.list;
+    //       list.splice(e.currentTarget.dataset.index, 1);
+    //       that.setData({
+    //         list: list
+    //       })
+    //     } else {
+    //      wx.showToast({
+    //        title: '取消解除',
+    //        icon:'none'
+    //      })
+    //     }
+    //   }
+    // })
+   
+    var userList = wx.getStorageSync('userList')
+
     var that = this;
     // 打印出当前选中的index
     console.log(e.currentTarget.dataset.index);
+    var index = e.currentTarget.dataset.index
+    var uuid=this.data.list[index].uuid
+    console.log(uuid)
     // 获取到列表数据
-    var list = that.data.list;
-    // 删除
-    list.splice(e.currentTarget.dataset.index, 1);
+    wx.showModal({
+      title: "提示",
+      content: '你将解除该设备？',
+      success: function(res) {
+        if (res.confirm) {
+          var id = userList.user.data.currentUser.id
+
+          // 解绑
+          var params = {
+            url: '/appLet/relieveBinding?userId=' + id + "&&uuid=" + uuid,
+            method: "POST",
+            callBack: (res) => {
+              console.log("解绑成功返回数据", res)
+              var list = that.data.list;
+              list.splice(e.currentTarget.dataset.index, 1);
+              that.setData({
+                list: list
+              })
+              console.log(res)
+
+            }
+
+          }
+          http.request(params)
+
+
+
+        }
+      }
+    })
+
+
+  
+  
+
     // 重新渲染
     that.setData({
-      list: list
+      list: this.data.list
     })
     initdata(that)
   },
@@ -218,88 +318,143 @@ Page({
     }
     this.WxValidate = new WxValidate(rules, messages)
   },
-  submitForm(e) {
-    /**
-     * 4-3(表单提交校验)
-     */
-    const params = e.detail.value
-    if (!this.WxValidate.checkForm(params)) {
-      const error = this.WxValidate.errorList[0]
-      this.showModal(error)
-      return false
-    }
-    /**
-     * 这里添写验证成功以后的逻辑
-     * 
-     */
-    //验证通过以后->
-    this.submitInfo(params);
-
-  },
+  
   /**
    * 表单-提交
    */
-  //调用验证函数
   formSubmit: function(e) {
-    var that = this;
-    var formData = e.detail.value;
-    console.log(formData);
-    var imgUrl = a;
-    // wx.request({
-    //   url: 'test.php', // 仅为示例，并非真实的接口地址
-    //   data: {
-    //     imgUrl: imgUrl,
-    //     formData: formData
-    //   },
-    //   header: {
-    //     'content-type': 'application/json' // 默认值
-    //   },
-    //   success(res) {
-    //     console.log(res.data);
-    //   }
-    // })
-    const params = e.detail.value
-    //校验表单
-    if (!this.WxValidate.checkForm(params)) {
-      const error = this.WxValidate.errorList[0]
-      this.showModal(error)
-      return false
-    }
-    this.showModal({
-      msg: '提交成功'
-    })
+    console.log('form发生了submit事件，携带数据为：', e.detail.value)
   },
+
+  // 解绑设备
 
 
   // 点击事件
   click: function() {
-    console.log(123)
+    console.log("开始扫描")
     var that = this;
     var list = that.data.list;
-    var show ;
-    wx.scanCode({
-      success: (res) => {
-        // this.show = "结果:" + res.result + "二维码类型:" + res.scanType + "字符集:" + res.charSet + "路径:" + res.path;
-        that.show = 
-        that.setData({
-          list: this.show.concat(list)
-        })
+    var show;
+   
 
-        wx.showToast({
-          title: '成功',
-          icon: 'success',
-          duration: 2000
+   wx.scanCode({
+       //是二维码才合法
+      scanType:'qrCode',
+      success: (res) => {
+
+        //扫描绑定设备
+        console.log('开始扫描绑定设备')
+        var userList = wx.getStorageSync('userList');
+        var userid = userList.user.data.currentUser.id
+
+        var uuid = res.result.substring(5, res.result.length)
+        
+        // var uuid = "999029035353112"
+        //获取扫描参数uuid=456767657567657
+        console.log("绑定uuid:", uuid)
+        var params = {
+          url: '/appLet/saveEquipmentSetOne?uuid=' + uuid + "&userId=" + userid,
+          method: "GET",
+          callBack: (res) => {
+            console.log('绑定设备成功',res)
+            wx.showToast({
+              title: res.info,
+              icon: 'success',
+              duration: 2000,
+              success:()=>{
+                that.getbangData()
+              }
+            })
+         
+          }
+
+        }
+        http.request(params)
+      }
+
+   })
+   
+   
+
+    // wx.scanCode({
+    //   //是二维码才合法
+    //   scanType:'qrCode',
+    //   success: (res) => {
+    //     // this.show = "结果:" + res.result + "二维码类型:" + res.scanType + "字符集:" + res.charSet + "路径:" + res.path;
+    //     // that.show = 
+    //     //   that.setData({
+    //     //     list: this.show.concat(list)
+    //     //  })
+
+    
+    //       console.log("扫描获取参数",res)
+    //       //获取扫描参数uuid=456767657567657
+    //       var params = {
+    //         url: '/appLet/findLetEquipment',
+    //         method: "GET",
+    //         data: {
+    //           uuid:"456767657567657"
+    //         },
+    //         callBack: (res) => {
+    //           console.log('获取扫描数据', res)
+    //           // that.setData({
+    //           //   imgUrls: res.data
+    //           // })
+    //         }
+
+    //       }
+    //       http.request(params)
+
+
+    //       //根据uuid获取结果存到show中
+
+
+    //       //拼接数组
+    //       //   that.setData({
+    //       //     list: this.show.concat(list)
+    //       // })
+
+    //       wx.showToast({
+    //         title: '成功',
+    //         icon: 'success',
+    //         duration: 2000
+    //       })
+        
+        
+    //   },
+    //   fail: (res) => {
+    //     wx.showToast({
+    //       title: '失败',
+    //       icon: 'success',
+    //       duration: 2000
+    //     })
+    //   },
+    //   complete: (res) => {}
+    // })
+  },
+
+  /**
+ * 获取绑定数据
+ */
+  getbangData() {
+    var that=this
+    var userList = wx.getStorageSync('userList');
+    var userid = userList.user.data.currentUser.id
+    dialog.loading();
+    //获取绑定数据
+    var params = {
+      url: '/appLet/findLetEquipment?userId=' + userid,
+      method: "GET",
+      callBack: (res) => {
+        dialog.hide()
+        console.log('获取绑定数据', res)
+        that.setData({
+          list: res.data
         })
-      },
-      fail: (res) => {
-        wx.showToast({
-          title: '失败',
-          icon: 'success',
-          duration: 2000
-        })
-      },
-      complete: (res) => {}
-    })
+      }
+
+    }
+    http.request(params)
   },
   //打开透明层
   showRule: function() {
@@ -332,17 +487,25 @@ Page({
       isHide: false
     })
   },
+  //跳转设备详情
+  deviceDetails:function(e){
+    var index = e.currentTarget.dataset.index;
+    var str = JSON.stringify(this.data.list[index])
+    wx.navigateTo({
+      url: 'deviceDetails/deviceDetails?jsonStr=' + str,
+      //  url: 'deviceDetails/deviceDetails？uuid' + this.data.uuid,
+    })
+  },
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function() {
-  },
+  onReady: function() {},
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function() {
-
+    this.getbangData()
   },
 
   /**

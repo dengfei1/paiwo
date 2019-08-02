@@ -1,0 +1,58 @@
+/* pages/home/feSet/feSet.wxss */
+.container{padding: 20rpx 30rpx}
+/* 问题和建议 */
+.textarea{width: 670rpx;border: 1px solid #cdcdcd;border-radius: 10rpx;min-height:150rpx;padding: 10rpx ;text-align: justify;margin-top: 10rpx}
+textarea{width:650rpx}
+/* 上传故障图片 */
+.camera{width: 200rpx;line-height: 200rpx;border: 1px solid #cdcdcd;text-align: center;margin-top: 10rpx}
+.icon-camera1 {font-size: 50rpx}
+.img{width: 202rpx;height: 202rpx;overflow: hidden;margin-left: 20rpx;margin-top: 10rpx}
+image{width: 100%;height: 100%;}
+/* 信息 */
+.section{margin: 20rpx 0}
+input{border: 1px solid #cdcdcd;border-radius: 15rpx;display: inline-block;width: 97%;padding: 10rpx;height: 70rpx}
+/* 提交 */
+.submit{background: #0194dd;margin: 30rpx;font-weight: bold;color: white}
+.gallery {    
+  width:630rpx;
+margin:0 auto;
+display:flex;
+justify-content:flex-start;
+flex-wrap:wrap;
+max-height:635rpx;
+overflow:hidden;
+
+}
+/*每张图片所占容器*/
+.item {    
+  position:relative;
+margin:15rpx;
+width:180rpx;
+height:180rpx;
+}
+.item image{
+  width: 100%;
+  height: 100%;
+}
+/*add按钮*/
+.item .addIcon{
+  position:relative;
+  width:200rpx;
+  height:200rpx;
+  text-align:center;
+  line-height:200rpx;
+  font-size:80rpx;
+  background: #f2f2f2;
+  color: #555;
+}
+/*删除按钮*/
+.delete {    
+ position:absolute;
+right:-13rpx;
+top:-18rpx;
+opacity:1;
+height:36rpx;
+font-size:22rpx;
+font-weight:700;
+padding:0 8rpx 0 10rpx;
+}
