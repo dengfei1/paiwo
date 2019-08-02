@@ -47,8 +47,9 @@ Page({
     dataArr3: [],
     isShow:false,
     content:'',
-    objData :{}
-    
+    objData :{},
+    id: 0,
+    state: 0
   },
 
   /**
@@ -93,6 +94,56 @@ Page({
 
 
   },
+  deviceDetails:function(e){
+    let index = e.currentTarget.dataset.index;
+    let { dataArr } = this.data
+    let id = dataArr[index].id
+    let state = dataArr[index].state
+    this.setData({
+      id:id,
+      state: state
+    })
+  },
+  /**
+   * 确认告警
+   */
+  confirm:function(e){
+    let that=this
+    let { id, state } = that.data
+    console.log(id, state)
+
+      var params = {
+        url: '/report/updateReadState?id=' + id + "&&state=" + state,
+        method: "POST",
+        callBack: (res) => {
+          dialog.hide();
+          console.log('确认告警', res)
+          wx.showToast({
+            title: '已确认告警',
+            icon: 'none'
+          })
+          that.setData({
+            isShow: false
+          })
+
+          //刷新数据
+          that.getMyBadInfo()
+        }
+
+
+      }
+      http.request(params)
+    
+
+  },
+/**
+ * 取消
+ */
+  cancel:function(){
+    this.setData({
+      isShow:false
+    })
+  },
   /**
    * 获取告警信息
    */
@@ -104,7 +155,7 @@ Page({
 
     dialog.loading();
     var params = {
-      url: '/report/findAllWxReport?userId=' + userid + "&&pageNum=" + 1 + "&&pageSize=" + 5,
+      url: '/report/findAllWxReport?userId=' + userid + "&&pageNum=" + 1 + "&&pageSize=" + 30,
       method: "POST",
       callBack: (res) => {
         dialog.hide();
@@ -141,19 +192,19 @@ Page({
     dataArr3.length = 0;
     for (let i = 0; i < dataArr.length; i++) {
       // 0为已确认
-      if (dataArr[i].state == 0) {
+      if (dataArr[i].readState == 1) {
         dataArr[i].background = '#0093dd';
         dataArr[i].color = '#333';
         dataArr1.push(dataArr[i]);
       }
       //1为已报修
-      if (dataArr[i].state == 1) {
-        dataArr[i].background = '#cccdcd';
-        dataArr[i].color = '#333';
-        dataArr2.push(dataArr[i]);
-      }
+      // if (dataArr[i].state == 1) {
+      //   dataArr[i].background = '#cccdcd';
+      //   dataArr[i].color = '#333';
+      //   dataArr2.push(dataArr[i]);
+      // }
       // 2为未处理 
-      if (dataArr[i].state == 2) {
+      if (dataArr[i].readState == 0) {
         dataArr[i].background = '#ff6100';
         dataArr[i].color = '#ff792e';
         dataArr3.push(dataArr[i]);
@@ -176,7 +227,7 @@ Page({
     let index = e.currentTarget.dataset.index;
     let { dataArr } = that.data
     var objData = dataArr[index]
-    var content = objData.message
+    var content = objData.manage
     WxParse1.wxParse('article', 'html', content, that, 5);
     that.setData({
       isShow:true,

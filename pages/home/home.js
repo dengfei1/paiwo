@@ -22,7 +22,7 @@ Page({
     marquee2_margin: 60,
     size: 14,
     orientation: 'left', //滚动方向
-    dataArr: [],
+    count:0,
     userInfo:'',
     nickName:'',
     avatarUrl:'',
@@ -223,24 +223,24 @@ Page({
     // })
 
     //获取用户信息
-    // var userList = wx.getStorageSync('userList')
-    // console.log("userList", userList)
-    // var userid = userList.user.data.currentUser.id
-    // var params = {
-    //   url: '/report/findAllWxReport?userId=' + userid ,
-    //   method: "POST",
-    //   callBack: (res) => { 
-    //     console.log('获取告警信息', res)
-    //     if (res.data.length>0){
-    //       that.setData({
-    //         isHide: true,
-    //         dataArr: res.data
-    //       })
-    //     }
-    //   }
+    var userList = wx.getStorageSync('userList')
+    console.log("userList", userList)
+    var userid = userList.user.data.currentUser.id
+    var params = {
+      url: '/report/findAllWxReportNum?userId=' + userid ,
+      method: "POST",
+      callBack: (res) => { 
+        console.log('获取告警信息', res)
+        if (res.data){
+          that.setData({
+            isHide: true,
+            count: res.data
+          })
+        }
+      }
 
-    // }
-    // http.request(params)
+    }
+    http.request(params)
 
 
     //获取轮播图数据

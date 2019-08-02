@@ -15,23 +15,25 @@
   left: 0;
   right: 0;
   top: 0;
+  bottom: 0;
   z-index: 999;
   width: 100%;
   height: 100%;
-  padding: 30rpx;
 }
 
 .wraper{
-  width: 95%;
-  height: 100%;
+  width: 90%;
+  margin: 150rpx auto 300rpx auto;
+  border-radius: 15rpx;
+  position: relative;
 }
 
 .detail-mask{
-  padding: 20rpx 20rpx;
-  height: 1300rpx;
+  height: 800rpx;
   overflow: hidden;
   font-size: 28rpx;
   position: relative;
+  padding: 30rpx 30rpx;
 }
 
 /* 查看设备详情 */
@@ -45,4 +47,24 @@
   background: #ff6100;
   color: #fff;
   border-radius: 10rpx;
+}
+
+.confirm{
+  width: 120rpx;
+  padding: 10rpx 20rpx;
+  position: absolute;
+  bottom: 40rpx;
+  left: 50%;
+  margin-left: -70rpx;
+  background: #2b72bf;
+  color: #fff;
+  border-radius: 15rpx;
+  text-align: center;
+}
+
+/* 取消 */
+.cancel{
+  position: absolute;
+  top: -8rpx;
+  right: 1rpx;
 }

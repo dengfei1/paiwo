@@ -19,7 +19,7 @@
     </view>
   </view>
   <!-- 已报修 -->
-   <view class='list bo white' wx:for="{{dataArr2}}" data-index="{{index}}" bindtap="bindShow">
+   <!-- <view class='list bo white' wx:for="{{dataArr2}}" data-index="{{index}}" bindtap="bindShow">
     <view class='top' style='background:{{item.background}};color:#fff'>
       <view class='title fl'>{{item.pname}}</view>
       <view class='time fr'>{{item.startTime}}</view>
@@ -33,7 +33,7 @@
       <view class='code'>故障描述：{{item.code}}</view>
       <view class='suggest'>处理意见：{{item.manage}}</view>
     </view>
-  </view>
+  </view> -->
   <!-- 已确认 -->
    <view class='list bo white' wx:for="{{dataArr1}}" data-index="{{index}}" bindtap="bindShow">
     <view class='top' style='background:{{item.background}};color:#fff'>
@@ -47,7 +47,6 @@
       <view class='cleaned'></view>
       <view class='code'>故障代码：{{item.code}}</view>
       <view class='suggest'>处理建议：{{item.manage}}</view>
-      <view class='chakan iconfont icon-chakan fr f4' bindtap='deviceDetails' data-index="{{index}}"></view>
     </view>
   </view>
 
@@ -60,7 +59,10 @@
         <view class='cleaned'></view>
         <view class='code'>故障描述：{{objData.message}}</view>
         <view class='suggest'>处理意见：<template is="wxParse" data="{{wxParseData:article.nodes}}" /></view>
+        <view class="confirm" bindtap="confirm">确认告警</view>
       </view>
+       <!-- 取消 -->
+      <view class='iconfont icon-shanchu fr cancel' bindtap='cancel' style='width:100rpx;text-align:right'></view>
     </view>
   </view>
 </view>

@@ -92,7 +92,7 @@
     </view>
     <view class='dis rela' bindtap='toBad'>
       <text class='fe-bad backcol iconfont icon-gaojing dis'></text>
-      <view class='point abso' wx:if="{{isHide}}">{{dataArr.length}}</view>
+      <view class='point abso' wx:if="{{isHide}}">{{count}}</view>
       <view class='te-al f2'>{{dataList[2].name}}</view>
 
     </view>

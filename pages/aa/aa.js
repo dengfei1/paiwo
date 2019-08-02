@@ -272,7 +272,7 @@ Page({
 
           wx.request({
             //url: app.globalData.url + '/user/savewx',
-            url: app.globalData.url + '/user/savewx?phone=' + that.data.phone + '&&password=' + that.data.password + '&&code=' + that.data.code,
+            url: app.globalData.url + '/user/savewx?phone=' + that.data.phone + '&&password=' + that.data.password + '&&code=' + that.data.wxCode,
             method: "POST",
              data: {
                 // phone: that.data.phone,
@@ -329,7 +329,7 @@ Page({
   //验证码输入
   bindCodeInput(e) {
     this.setData({
-      code: e.detail.value
+      wxCode: e.detail.value
     })
     console.log(e.detail.value)
   },
@@ -412,7 +412,7 @@ Page({
     //console.log('手机号: ' + this.data.phone);
     // console.log('验证码: ' + this.data.code);
     // console.log('验证码: ' + this.data.userName);
-    console.log('wxCode: ' + that.data.code);
+    console.log('wxCode: ' + that.data.wxCode);
     wx.login({
        success:function(res){
          if(res.code){
@@ -422,8 +422,8 @@ Page({
              data: {
                phone: that.data.phone,
                // password: this.data.password,
-               code: that.data.code ,
-               wxCode:res.code
+               code: that.data.wxCode ,
+               wxCode: res.code
              },
              header: {
                'content-type': 'application/json' // 默认值
