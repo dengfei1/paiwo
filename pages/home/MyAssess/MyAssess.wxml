@@ -13,7 +13,7 @@
                 </view>
                 <view class='all fl h8'>
                   <view class='allTit color'>全部评价</view>
-                  <view class='allCont'>{{assessNumArr.allNum}}</view>
+                  <view class='allCont'>{{assessNumArr.allNum==""?0:assessNumArr.allNum}}</view>
                 </view>
                 <!-- <view class='img fl h8'>
                   <view class='imgTit color'>有图评价</view>
@@ -24,8 +24,8 @@
 
           <view class='bottomSwiper'>
             <view class='tabled'>
-              <view class='tab  {{currentData == 0 ? "tabBorer" : ""}}' data-current="0" bindtap='checkCurrent'>待评价({{assessNumArr.noPjNum}})</view>
-              <view class='tab  {{currentData == 1 ? "tabBorer" : ""}}' data-current="1" bindtap='checkCurrent'>已评价（{{assessNumArr.pjNum}}）</view>
+              <view class='tab  {{currentData == 0 ? "tabBorer" : ""}}' data-current="0" bindtap='checkCurrent'>待评价({{assessNumArr.noPjNum==""?0:assessNumArr.noPjNum}})</view>
+              <view class='tab  {{currentData == 1 ? "tabBorer" : ""}}' data-current="1" bindtap='checkCurrent'>已评价（{{assessNumArr.pjNum==""?0:assessNumArr.pjNum}}）</view>
             </view>
             <swiper current="{{currentData}}" class='swiper' style="height:800rpx" duration="300" bindchange="bindchange">
               <!-- 待评价 -->

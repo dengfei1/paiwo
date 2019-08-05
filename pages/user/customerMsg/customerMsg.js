@@ -9,9 +9,9 @@ Page({
    * 页面的初始数据
    */
   data: {
-      address:'',
-      realName:'',
-      phone:'',
+    address:'',
+    realName:'',
+    phone:'',
     address1:'',
     provinces: [],
     province: "",
@@ -22,7 +22,8 @@ Page({
     value: [0, 0, 0],
     values: [0, 0, 0],
     condition: false,
-    isHede:true
+    isHede:true,
+    cityData:[]
   },
   /**
  * 选择所在城市
@@ -222,10 +223,6 @@ Page({
     //验证函数
     that.initValidate();
 
-   
-   
-
-  
     wx.getStorage({
       key: 'userInfo',
       success: function (res) {

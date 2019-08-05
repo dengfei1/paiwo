@@ -9,41 +9,10 @@ Page({
    * 页面的初始数据
    */
   data: {
-    dataArr: [
-      // {
-      //   pname:'dfdf',
-      //   name:"dfd",
-      //   rank:"df",
-      //   code:'dfdf',
-      //   manage:'df',
-      //   background: '#0093dd',
-      //   color:"#333",
-      //   state:0
-      // },
-      // {
-      //   pname: 'dfdf',
-      //   name: "dfd",
-      //   rank: "df",
-      //   code: 'dfdf',
-      //   manage: 'df',
-      //   background: '#cccdcd',
-      //   color: "#333",
-      //   state: 1
-      // },
-      // {
-      //   pname: 'dfdf',
-      //   name: "dfd",
-      //   rank: "df",
-      //   code: 'dfdf',
-      //   manage: 'df',
-      //   background: '#ff6100',
-      //   color: "#333",
-      //   state: 2
-      // }
-    ],
+    dataArr: [],
 
     dataArr1: [],
-    dataArr2: [],
+    // dataArr2: [],
     dataArr3: [],
     isShow:false,
     content:'',
@@ -56,42 +25,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(e) {
-    // console.log('sah',123)
-     var that = this;
-    that.getMyBadInfo()
-    // // 判断是否处理
-   
-    // var userList = wx.getStorageSync('userList');
-    // var id = userList.user.data.currentUser.id;
-    // console.log('userList', userList.user.data.sessionId)
-    // app.globalData.header.Cookie = 'JSESSIONID=' + userList.user.data.sessionId;
-    // wx.request({
-    //   url: app.globalData.url + '/appLet/findEquipmentFault?userId=' + id,
-    //   // url: app.globalData.url + '/findAll/systemParam?type=' + 1,
-    //   header: app.globalData.header,
-    //   method: "POST",
-    //   data: {
-    //   },
-    //   success: function (res) {
-    //     console.log(res,'res')
-    //     var list = res.data.data;
-    //     that.setData({
-    //       dataArr:list
-    //     })
-    //     console.log(that.data.dataArr,'dataArr')
-        
-    //   },
-    //   fail: function (res) {
-    //     console.log(res,'res1')
-    //     wx.showToast({
-    //       title: '请求失败',
-    //       icon: 'none',
-    //       duration: 1500
-    //     })
-    //   }
-    // });
-   
-
+     this.getMyBadInfo()
 
   },
   deviceDetails:function(e){
@@ -139,7 +73,7 @@ Page({
 /**
  * 取消
  */
-  cancel:function(){
+  bindCancel:function(){
     this.setData({
       isShow:false
     })
@@ -188,7 +122,7 @@ Page({
     let { dataArr, dataArr1, dataArr2, dataArr3 } = this.data
     var that = this;
     dataArr1.length = 0;
-    dataArr2.length = 0;
+    // dataArr2.length = 0;
     dataArr3.length = 0;
     for (let i = 0; i < dataArr.length; i++) {
       // 0为已确认
@@ -210,10 +144,10 @@ Page({
         dataArr3.push(dataArr[i]);
       }
     }
-    console.log("已处理", dataArr1, dataArr2, dataArr3)
+    console.log("已处理", dataArr1, dataArr3)
     that.setData({
       dataArr1: dataArr1,
-      dataArr2: dataArr2,
+      // dataArr2: dataArr2,
       dataArr3: dataArr3
     })
     

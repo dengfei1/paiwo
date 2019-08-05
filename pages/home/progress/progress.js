@@ -82,56 +82,24 @@ Page({
         border: ''
     },
   ],
-    detailData: {
-      progress: [
-        {
-          word: "提交工单",
-          state: 2
-        },
-        {
-          word: "已接单",
-          state: 2
-        },
-        {
-          word: "开始维修",
-          state: 2
-        },
-        {
-          word: "维修结束",
-          state: 2
-        },
-        {
-          word: "已确认",
-          state: 5
-        },
-        {
-          word: "已确认",
-          state: 5
-        },
-        {
-          word: "已确认",
-          state: 5
-        },
-      ]
-
-    },
+  
     listArr:[],
     times:[
       {
-        time1:"08-11",
-        time2: "21-11"
+        time1:"",
+        time2: ""
       },
       {
-        time1: "08-11",
-        time2: "22 - 11"
+        time1: "",
+        time2: ""
       },
       {
-        time1: "08-11",
-        time2: "23 - 11"
+        time1: "",
+        time2: ""
       },
       {
-        time1: "08-11",
-        time2: "24 - 11"
+        time1: "",
+        time2: ""
       },
     ]
 
@@ -320,33 +288,39 @@ Page({
     }
 
     //获取时间 2019-07-25 10:34:36
-    console.log(that.data.deviceArr)
+    console.log(that.data.deviceArr[index])
+    console.log(that.data.deviceArr[index].bxTime)
+    console.log(that.data.deviceArr[index].pdTime)
+    //维修时间
     var wxTime = that.data.deviceArr[index].wxTime
+    //报修时间
     var bxTime = that.data.deviceArr[index].bxTime
-    var bxTime = that.data.deviceArr[index].pdTime
+    //派单时间
+    var pdTime = that.data.deviceArr[index].pdTime
+    //接单时间
     var jdTime = that.data.deviceArr[index].jdTime
-    
-    var timeArr = [wxTime, bxTime, bxTime,jdTime]
+    console.log("进度时间", wxTime, pdTime, jdTime, bxTime)
+    var timeArr = [wxTime, pdTime, jdTime, bxTime]
     console.log("timeArr:",timeArr)
     var time1=""
     var time2 = ""
-    var times = []
+    var times = this.data.times;
     timeArr.forEach((item,index) => {
       console.log("item:", item)
       //这里需要截取的内容
-      time1= item.substring(5, 10)
-      time2 = item.substring(11, 16)
-      console.log("time1:", time1, "time2", time2)
-      times[index].time1 = time1
-      times[index].time2 = time2
+      if (item!=undefined){
+        time1 = item.substring(5, 10)
+        time2 = item.substring(11, 16)
+        console.log("time1:", time1, "time2", time2)
+        times[index].time1 = time1
+        times[index].time2 = time2
+      }
+      
     })
     this.setData({
-      times: times.reverse()
+      times: times
     })
     console.log("times", times)
-    console.log(time1, time2)
-    //截取时间
-    console.log(wxTime, bxTime, bxTime, jdTime)
     
   },
   /**

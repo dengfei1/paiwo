@@ -5,6 +5,8 @@ var WxParse = require('../../../wxParse/html2json.js')
 var WxParse1 = require('../../../wxParse/wxParse.js')
 
 var dialog = require('../../../utils/dialog.js')
+var times1=require('../../../utils/times1.js')
+
 Page({
 
   /**
@@ -20,31 +22,11 @@ Page({
     noAss: '',
     assed: '',
     // 信息公告
-    dataArr: [
-      // { 
-      //   time:'12:44',
-      //   title:'标签公告',
-      //   main:'大幅度发',
-      //   more: '查看详情',
-      //   mored:'more'
-      // }, 
-      // {
-      //   time: '12:44',
-      //   title: '标签公告',
-      //   main: '大幅度发',
-      //   more: '查看详情',
-      //   mored: 'more'
-      // }
-     
-    ],
+    dataArr: [],
     page: 1,
     pages: 0,
     dataList: [{}],
-    moreDetail: [{
-      title: '公告标题',
-      main: '  公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概公告内容大概',
-      imgUrl: ''
-    }],
+    moreDetail: [],
 
    
     swiperHeight: "",
@@ -55,9 +37,7 @@ Page({
     scrollTop: 100,
     
     //存时间
-    results:[{
-      timeItem:""
-    }]
+    results:[]
     
   },
 
@@ -81,7 +61,7 @@ Page({
         var times=[];//取出时间
         for(let i=0;i<result.length;i++) {
           list.push(result[i].content)
-          times.push(result[i].stopTime)
+          times.push(result[i].startTime)
         }
         console.log("times",times)
         var htmlAry = [];
@@ -91,17 +71,19 @@ Page({
           
         }
         for(let i=0;i<times.length;i++){
-          // var stringTime = "2017-11-24 10:18:00";
+          // var stringTime = "2019-8-4 00:00:00";
           var stringTime = times[i]
-          stringTime = new Date(Date.parse(stringTime.replace(/-/g, "/")));
-          var date = stringTime.getTime();
+          console.log("发布时间：" + stringTime)
+          var stringTime1 = new Date(Date.parse(stringTime.replace(/-/g, "/")));
+          console.log("stringTime1", stringTime1)
+          var date = stringTime1.getTime();
           console.log("dd", date )
-          this.timeago(date,i)
+          this.timeago(date)
          
       
-          for (let i = 0; i < this.data.results.length;i++){
-            var timeItem = this.data.results[i].timeItem
-            result[i].timeItem = timeItem
+          for (let j = 0; j < this.data.results.length;j++){
+            var timeItem = this.data.results[j]
+            result[j].timeItem = timeItem
             }
             that.setData({
               dataArr: result,
@@ -123,7 +105,7 @@ Page({
    * 把后台传来的日期时间转化为几天前,几小时前，几分钟前在前端展现
    */
 
-  timeago(dateTimeStamp,i){
+  timeago(dateTimeStamp){
     console.log("调用timeago", dateTimeStamp)
     var result=""
     // dateTimeStamp是一个时间毫秒，注意时间戳是秒的形式，在这个毫秒的基础上除以1000，就是十位数的时间戳。13位数的都是时间毫秒。
@@ -145,28 +127,40 @@ Page({
     var  dayC = diffValue / day;
     var  weekC = diffValue / week;
     var  monthC = diffValue / month;
-  
+    console.log("天数：", dayC)
+    console.log("时间：", hourC)
     if(monthC>= 1){
-       result = "" + parseInt(monthC) + "月前";
+      // result = "" + parseInt(monthC) + "月前";
+      result = "" + times1.formatTimeTwo(dateTimeStamp,"Y年M月D日")
      }else if (weekC >= 1) {
        result = "" + parseInt(weekC) + "周前";
-     }else if (dayC >= 1) {
-      result = "" + parseInt(dayC) + "天前";
-     }else if (hourC >= 1) {
-      result = "" + parseInt(hourC) + "小时前";
-     }else if (minC >= 1) {
-        result = "" + parseInt(minC) + "分钟前";
-      }else{
-        result = "刚刚";
-      } 
+    } else if (parseInt(dayC)==2) {
+      // result = "" + parseInt(dayC) + "昨天";
+      result = "昨天" + times1.formatTimeTwo(dateTimeStamp, "Y年M月D日 h:m").substring(11, 17)
+    } else if (parseInt(dayC) > 2) {
+      // result = "" + parseInt(dayC) + "昨天";)
+      result = times1.formatTimeTwo(dateTimeStamp, "Y年M月D日 h:m").substring(5, 17)
+    } else if (hourC <1||hourC >= 1) {
+      console.log(hourC)
+      // result = "" + parseInt(hourC) + "小时前";
+      result = times1.formatTimeTwo(dateTimeStamp, "Y年M月D日 h:m").substring(12, 17) 
+     }
+    //  else if (minC >= 1) {
+    //     // result = "" + parseInt(minC) + "分钟前";
+    //   result = times1.formatTimeTwo(dateTimeStamp, "Y年M月D日 h:m").substring(11, 17) + "分钟前"
+    //   }else{
+    //     result = "刚刚";
+    //   } 
     console.log("调用timeago", dateTimeStamp)
       console.log("result",result)
       var  results=this.data.results
-      results[i].timeItem = result
+     console.log("第一次")
+     results.push(result)
+      console.log("第一次")
       this.setData({
         results: results
       })
-    console.log(this.data.result)
+    console.log(this.data.results)
       // return result;
 	},
 

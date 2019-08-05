@@ -98,6 +98,26 @@ Page({
     that.run(); // 水平一行字滚动完了再按照原来的方向滚动
    
 
+    //获取用户信息
+    var userList = wx.getStorageSync('userList')
+    console.log("userList", userList)
+    var userid = userList.user.data.currentUser.id
+    var params = {
+      url: '/report/findAllWxReportNum?userId=' + userid,
+      method: "POST",
+      callBack: (res) => {
+        console.log('获取告警信息', res)
+        if (res.data) {
+          that.setData({
+            isHide: true,
+            count: res.data
+          })
+        }
+      }
+
+    }
+    http.request(params)
+
   },
   run: function() {
     var that = this;
@@ -221,26 +241,6 @@ Page({
     //     }
     //   }
     // })
-
-    //获取用户信息
-    var userList = wx.getStorageSync('userList')
-    console.log("userList", userList)
-    var userid = userList.user.data.currentUser.id
-    var params = {
-      url: '/report/findAllWxReportNum?userId=' + userid ,
-      method: "POST",
-      callBack: (res) => { 
-        console.log('获取告警信息', res)
-        if (res.data){
-          that.setData({
-            isHide: true,
-            count: res.data
-          })
-        }
-      }
-
-    }
-    http.request(params)
 
 
     //获取轮播图数据

@@ -9,9 +9,9 @@ function getToken(callback) {
       // 发送 res.code 到后台换取 openId, sessionKey, unionId
       request({
         login:true,
-        url: '/login?grant_type=mini_app',
+        url: '/login/WXlogin',
         data: {
-          principal: res.code
+          wxCode: res.code
         },
         callBack: function (result) {
           if (result.userStutas == 0) {
@@ -81,11 +81,11 @@ function request(params, refetch) {
         })
 
       } else if (res.statusCode == 400) {
-        wx.hideLoading();
-        wx.showToast({
-          title: res.data,
-          icon: "none"
-        })
+        // wx.hideLoading();
+        // wx.showToast({
+        //   title: res.data,
+        //   icon: "none"
+        // })
 
       } else if (res.statusCode == 403) {
         wx.hideLoading();

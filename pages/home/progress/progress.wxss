@@ -20,12 +20,15 @@ page{
   padding: 15rpx 10rpx;
 }
 .handle{
-  padding:6rpx 20rpx;
+  padding:0rpx 20rpx;
   border-radius: 60rpx;
   background: #0193d9;
   color: #fff;
   margin-right: 30rpx;
   font-size: 25rpx;
+  text-align: center;
+  height: 44rpx;
+  line-height: 44rpx;
 }
 .header-content{
   padding: 15rpx 10rpx;
@@ -66,6 +69,8 @@ page{
   margin-top: 46rpx;
 }
 .time{
+  width: 100rpx;
+  height: 72rpx;
   margin-bottom: 158rpx;
 }
 .process_wrap{

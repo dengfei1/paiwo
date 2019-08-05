@@ -1,19 +1,8 @@
 // pages/home/mySet/mySet.js
-// var wxValidate = require('../../../utils/WxValidate.js');
-import WxValidate from '../../../utils/WxValidate';
 var http = require("../../../utils/http.js")
 var dialog = require("../../../utils/dialog.js");
-var initdata = function(that) {
-  var list = that.data.list
-  for (var i = 0; i < list.length; i++) {
-    list[i].shows = ""
-  }
-  that.setData({
-    list: list
-  })
-}
-var app = new getApp();
-// var id = '';
+
+
 Page({
   /**
    * 页面的初始数据
@@ -21,9 +10,7 @@ Page({
   data: {
     delBtnWidth: 185, //删除按钮宽度单位（rpx） 
     isHide: false,
-    list: [
-     
-    ],
+    list: [],
     show: "",
     id: '',
     testNum: '',
@@ -33,45 +20,7 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function(options) {
-
-    var use = wx.getStorageSync('apply')
-    var that = this;
-      //验证函数
-    that.initValidate();
-    that.initEleWidth();
-    console.log("e:", app.globalData.header);
-    //获取用户信息
-    var userList = wx.getStorageSync('userList')
     
-    dialog.loading();
-
-    var id = userList.user.data.currentUser.id
-    console.log(id, "id");
-    console.log('userList', userList.user.data.sessionId)
-    app.globalData.header.Cookie = 'JSESSIONID=' + userList.user.data.sessionId;
-    wx.request({
-      url: app.globalData.url + '/appLet/findLetEquipment?userId=' + id,
-      header: app.globalData.header,
-      method: "POST",
-      success: function(res) {
-        dialog.hide();
-        
-        console.log(res, 'res')
-        var dataList = res.data.data;
-        that.setData({
-          list: dataList
-        })
-      },
-      fail: function(res) {
-        console.log(res, 'res1')
-        wx.showToast({
-          title: '请求失败',
-          icon: 'none',
-          duration: 1500
-        })
-      }
-    });
-
   },
   // 刷新加载
   upper: function (e) {
@@ -226,7 +175,6 @@ Page({
               that.setData({
                 list: list
               })
-              console.log(res)
 
             }
 
@@ -239,41 +187,14 @@ Page({
       }
     })
 
-
-  
-  
-
     // 重新渲染
     that.setData({
       list: this.data.list
     })
     initdata(that)
   },
-  submitForm(e) {
-    /**
-     * 4-3(表单提交校验)
-     */
-    const params = e.detail.value
-    if (!this.WxValidate.checkForm(params)) {
-      const error = this.WxValidate.errorList[0]
-      this.showModal(error)
-      return false
-    }
-    /**
-     * 这里添写验证成功以后的逻辑
-     * 
-     */
-    //验证通过以后->
-    this.submitInfo(params);
-  },
-  submitInfo(params) {
-    // form提交
-    var form = params;
-    console.log('将要提交的表单信息：', form);
-    wx.showToast({
-      title: '提交成功！！！！',
-    })
-  },
+ 
+
   // 报错
   showModal(error) {
     wx.showModal({
@@ -281,67 +202,22 @@ Page({
       showCancel: false,
     })
   },
-  //验证函数
-  initValidate() {
-    const rules = {
-      name: {
-        required: true,
-        minlength: 2
-      },
-      tel: {
-        required: true,
-        tel: true
-      },
-      address: {
-        required: true
-      }
-    }
-    const messages = {
-      // name: {
-      //   required: '请填写姓名',
-      //   minlength: '请输入正确的名称'
-      // },
-      // phone: {
-      //   required: '请填写手机号',
-      //   tel: '请填写正确的手机号'
-      // }
-      name: {
-        required: '请输入姓名',
-        rangelength: '请输入2~4个汉字个汉字'
 
-      },
-      tel: {
-        required: '请输入11位手机号码',
-        tel: '请输入正确的手机号码',
-      },
-
-    }
-    this.WxValidate = new WxValidate(rules, messages)
-  },
-  
   /**
-   * 表单-提交
+   * 扫描设备
    */
-  formSubmit: function(e) {
-    console.log('form发生了submit事件，携带数据为：', e.detail.value)
-  },
-
-  // 解绑设备
-
-
-  // 点击事件
   click: function() {
-    console.log("开始扫描")
+    console.log("开始扫描设备")
     var that = this;
-    var list = that.data.list;
-    var show;
-   
-
    wx.scanCode({
        //是二维码才合法
       scanType:'qrCode',
       success: (res) => {
-
+   //     // this.show = "结果:" + res.result + "二维码类型:" + res.scanType + "字符集:" + res.charSet + "路径:" + res.path;
+    //     // that.show = 
+    //     //   that.setData({
+    //     //     list: this.show.concat(list)
+    //     //  })
         //扫描绑定设备
         console.log('开始扫描绑定设备')
         var userList = wx.getStorageSync('userList');
@@ -361,11 +237,8 @@ Page({
               title: res.info,
               icon: 'success',
               duration: 2000,
-              success:()=>{
-                that.getbangData()
-              }
             })
-         
+            that.getbangData()
           }
 
         }
@@ -373,64 +246,6 @@ Page({
       }
 
    })
-   
-   
-
-    // wx.scanCode({
-    //   //是二维码才合法
-    //   scanType:'qrCode',
-    //   success: (res) => {
-    //     // this.show = "结果:" + res.result + "二维码类型:" + res.scanType + "字符集:" + res.charSet + "路径:" + res.path;
-    //     // that.show = 
-    //     //   that.setData({
-    //     //     list: this.show.concat(list)
-    //     //  })
-
-    
-    //       console.log("扫描获取参数",res)
-    //       //获取扫描参数uuid=456767657567657
-    //       var params = {
-    //         url: '/appLet/findLetEquipment',
-    //         method: "GET",
-    //         data: {
-    //           uuid:"456767657567657"
-    //         },
-    //         callBack: (res) => {
-    //           console.log('获取扫描数据', res)
-    //           // that.setData({
-    //           //   imgUrls: res.data
-    //           // })
-    //         }
-
-    //       }
-    //       http.request(params)
-
-
-    //       //根据uuid获取结果存到show中
-
-
-    //       //拼接数组
-    //       //   that.setData({
-    //       //     list: this.show.concat(list)
-    //       // })
-
-    //       wx.showToast({
-    //         title: '成功',
-    //         icon: 'success',
-    //         duration: 2000
-    //       })
-        
-        
-    //   },
-    //   fail: (res) => {
-    //     wx.showToast({
-    //       title: '失败',
-    //       icon: 'success',
-    //       duration: 2000
-    //     })
-    //   },
-    //   complete: (res) => {}
-    // })
   },
 
   /**
@@ -438,6 +253,7 @@ Page({
  */
   getbangData() {
     var that=this
+    dialog.loading();
     var userList = wx.getStorageSync('userList');
     var userid = userList.user.data.currentUser.id
     dialog.loading();
@@ -451,6 +267,7 @@ Page({
         that.setData({
           list: res.data
         })
+        dialog.hide();
       }
 
     }
@@ -472,13 +289,6 @@ Page({
     this.setData({
       isHide: true
     })
-  },
-  // 表单提交事件
-  formSubmit(e) {
-    console.log('form发生了submit事件，携带数据为：', e.detail.value)
-  },
-  formReset() {
-    console.log('form发生了reset事件')
   },
 
   // 返回

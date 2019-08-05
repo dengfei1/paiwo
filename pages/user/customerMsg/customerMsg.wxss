@@ -40,7 +40,7 @@ input{
   text-align: center;
 }
 .textarea {
-  width: 97%;
+  width: 91%;
   border:1px solid #efefef;
   border-radius:10rpx;
   min-height:150rpx;

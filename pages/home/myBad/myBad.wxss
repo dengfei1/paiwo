@@ -44,8 +44,6 @@
   position: absolute;
   right: 20rpx;
   bottom: 15rpx;
-  background: #ff6100;
-  color: #fff;
   border-radius: 10rpx;
 }
 
@@ -65,6 +63,7 @@
 /* 取消 */
 .cancel{
   position: absolute;
-  top: -8rpx;
-  right: 1rpx;
+  top: -4rpx;
+  right: 7rpx;
+  font-size: 40rpx;
 }

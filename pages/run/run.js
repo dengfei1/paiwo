@@ -406,11 +406,10 @@ Page({
           chartList: res.data,
           isHided2: true
         })
-      
-       
         that.paintingInterTem()
      
-        if (this.data.isHided2) {
+        if (that.data.isHided2) {
+        
            var timeOut = setTimeout(function () {
              let { csTemp, tempTime } = that.data
              that.test(csTemp, tempTime, 'blue', '出水温度')
@@ -509,7 +508,7 @@ Page({
     var chartList = that.data.chartList;
     var csTemp = []
     var tempTime = [];
-    for (let i = 0; i < chartList.length; i++) {
+    for (let i = 50; i < chartList.length; i++) {
       // console.log(chartList[i][0], chartList[i][1]);
       let date = chartList[i][0].substring(11, chartList[i][0].length - 3)
 
@@ -570,19 +569,21 @@ Page({
       success: function(res) {
         if (res.confirm) {
           var addTime = that.data.addTime;
+          console.log("删除", addTime)
           var index = e.currentTarget.dataset.index;
           console.log('index', index);
-          addTime.splice(e.currentTarget.dataset.index, 1);
-          that.setData({
-            addTime: addTime
-          })
-
+          var openHour = addTime[index].open1
+          var openMinute = addTime[index].open2
+          console.log("删除", openHour, openMinute)
           var params = {
-            url: '/timer/del?uuid=' + this.data.dataList.uuid + "&&openHour=" + openHour+"&&",
+            url: '/timer/del?uuid=' + that.data.dataList.uuid + "&&openHour=" + openHour+"&&",
             method: "GET",
             callBack: (res) => {
               console.log('删除定时', res)
-
+              addTime.splice(e.currentTarget.dataset.index, 1);
+              that.setData({
+                addTime: addTime
+              })
             }
 
           }
@@ -684,12 +685,34 @@ Page({
   * 查看定时结果
   */
   viewTiming(){
+    console.log("定时设备uuid", this.data.dataList.uuid)
+    var that=this
     var params = {
-      url: '/timer/findByUuid?uuid=' + this.data.dataList.uuid,
+      url: '/timer/findByUuid?uuid=' + that.data.dataList.uuid,
       method: "GET",
       callBack: (res) => {
         console.log('查看定时结果', res)
+        let onTime=res.data;
+        var addTime=[];
+        console.log("onTime", onTime)
         
+        
+        for (let i = 0; i < onTime.length;i++){
+          var onTimeOne = {
+            open1: onTime[i].openHour,
+            open2: onTime[i].openMinute,
+            close1: onTime[i].closeHour,
+            close2: onTime[i].closeMinute,
+          }
+          console.log("第" + i + "次", onTimeOne)
+          addTime[i] = onTimeOne
+          console.log(addTime)
+        }
+   
+          that.setData({
+            addTime: addTime
+          })
+      
       }
 
     }
@@ -793,21 +816,6 @@ Page({
    */
   onLoad: function(options) {
    
-    // setTimeout(function({
-    //   var params = {
-    //     url: '/commandPaiWo/findCommand',
-    //     method: "GET",
-    //     callBack: (res) => {
-    //       console.log('查看指令送达状态', res)
-
-    //     }
-
-    //   }
-    //   http.request(params)
-    // },1000)
-    
-   
-
     var that = this;
     // 获取当前时间
     var dated = util.formatDate(new Date());
@@ -832,8 +840,6 @@ Page({
     
 
 
-    // 设备查询
-    this.devInfo()
     
    
 
@@ -888,7 +894,7 @@ Page({
         that.run1(res.data.data[0].uuid)
         console.log("默认第一个设备uuid", res.data.data[0].uuid, that.data.dataList)
         // that.chartList()
-
+        that.viewTiming()
 
 
       },
@@ -1121,6 +1127,7 @@ Page({
       [data]: ind.length < 2 ? '0' + ind : ind,
       open1:ind
     })
+
     console.log(that.data.open1,'open1')
     console.log(that.data.addTime)
   },
@@ -1331,7 +1338,9 @@ Page({
    */
   onShow: function() {
 
-    
+
+    // 设备查询
+    this.devInfo()
   
     //判断是否绑定设备
     this.isDev()
@@ -1339,7 +1348,7 @@ Page({
     //判断机型
     this.typeModel()
 
-    this.viewTiming()
+  
 
     console.log(this.data.dataList == '{}')
     console.log(this.data.dataList)
@@ -1355,6 +1364,8 @@ Page({
       console.log("启动选择的设备",uuid)
       //启动选择的设备
       this.run1(uuid)
+
+     
     }
    
   },

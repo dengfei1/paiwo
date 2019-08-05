@@ -1,6 +1,6 @@
 <view class='container'>
   <view class='text'>
-      <view class='title title1 f4'>{{objList.type}}</view>
+      <view class='title title1 f3'>{{objList.type}}</view>
   </view>
   <view class='text'>
       <view class='title title2 f3'>投诉内容</view>
@@ -8,6 +8,6 @@
   </view>
   <view class='text'>
     <view class='title title2 f3'>处理意见</view>
-    <text class='f2 content'>{{objList.conclusion}}</text>
+    <text class='f2 content'>{{objList.opinion}}</text>
   </view>
 </view>

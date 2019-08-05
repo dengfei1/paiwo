@@ -30,7 +30,7 @@
       <view class='name word'>投诉类别：{{item.type}}</view>
 
       <view class='code word'>投诉内容：{{item.content}}</view>
-      <view class='suggest word'>处理建议：{{item.dealRemark}}</view>
+      <view class='suggest word'>处理建议：{{item.opinion}}</view>
     </view>
   </view>
   <!-- 新增投诉 -->

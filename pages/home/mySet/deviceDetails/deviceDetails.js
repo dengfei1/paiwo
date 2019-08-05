@@ -1,7 +1,7 @@
 // pages/home/mySet/deviceDetails/deviceDetails.js
 import WxValidate from '../../../../utils/WxValidate';
 var http = require("../../../../utils/http.js");
-
+var dialog = require("../../../../utils/dialog.js");
 Page({
 
   /**
@@ -73,9 +73,6 @@ Page({
     }
     //验证通过以后->
     this.submitInfo(params);
-    // this.showModal({
-    //   msg: '提交成功'
-    // })
   },
  
   /**
@@ -107,6 +104,7 @@ Page({
     * 表单-提交
     */
   submitInfo(params) {
+    dialog.loading();
     // form提交
     var form = params;
     console.log('将要提交的表单信息：', form);
@@ -123,23 +121,21 @@ Page({
 
       var paramss = {
         url: '/equipment/updateClientMessage?clientName=' + clientName + "&&clientPhone=" + clientPhone + "&&clientAddress=" + clientAddress + "&&uuid=" + this.data.obj.uuid,
-        method: "POST",
+        method: "GET",
+        header: {'Content-Type': 'json'},
         callBack: (res) => {
     
           console.log('提交用户信息成功', res)
           wx.showToast({
             title: '保存成功',
-            duration:2000,
-            success:()=>{
-              //跳转我的设备
-              wx.redirectTo({
-                // 返回上一级页面。
-                url:'/pages/home/mySet/mySet'
-              })
-            }
+            duration:1000,
+            icon:'none'
           })
-          wx.hideLoading()
-          
+          dialog.hide();
+          //跳转我的设备
+          wx.navigateBack({
+            delta: 1
+          })
         }
 
       }

@@ -312,7 +312,9 @@ Page({
                 })
               }
              
-              
+              wx.redirectTo({
+                url: '/pages/aa/aa',
+              })
             }
           });
         }
@@ -421,7 +423,6 @@ Page({
 
              data: {
                phone: that.data.phone,
-               // password: this.data.password,
                code: that.data.wxCode ,
                wxCode: res.code
              },

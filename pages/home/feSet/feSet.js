@@ -266,20 +266,23 @@ getFeSet(){
     let imageArr = images
     console.log(uuid, userId, faultType, problem, clientName, clientPhone, clientAddress, imageArr,imageArr.length)
     if (uuid != "" && userId != "" && problem != "" && clientName != "" && clientPhone != "" && clientAddress != "" && imageArr.length != 0 && faultType!="") {
+      console.log("进来了")
       var params = {
         url: '/repair/save?uuid=' + uuid + '&&userId=' + userId + '&&problem=' + problem + '&&clientName=' + clientName + '&&clientPhone=' + clientPhone + '&&clientAddress=' + clientAddress + '&&uploadFile1=' + imageArr[0] + '&&uploadFile2=' + imageArr[1] + '&&uploadFile3=' + imageArr[2] + "&&faultType=" + faultType,
         method: "GET",
         callBack: (res) => {
           console.log('设备报修提交', res)
+          
+          this.showModal({
+            msg: '提交成功'
+          })
+
         }
 
       }
       http.request(params)
 
-      this.showModal({
-        msg: '提交成功'
-      })
-
+     
     }else{
       wx.showModal({
         content: '请填写完整信息',
